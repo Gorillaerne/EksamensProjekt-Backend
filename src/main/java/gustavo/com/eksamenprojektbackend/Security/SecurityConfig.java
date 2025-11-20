@@ -1,5 +1,5 @@
 package gustavo.com.eksamenprojektbackend.Security;
-import gustavo.com.cryptoaiinvestor.Service.UserService;
+import gustavo.com.eksamenprojektbackend.Service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
