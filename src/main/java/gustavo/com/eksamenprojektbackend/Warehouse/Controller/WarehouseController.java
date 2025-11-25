@@ -39,4 +39,10 @@ public class WarehouseController {
         return new ResponseEntity<>(warehouseService.getWarehouseById(id), HttpStatus.FOUND);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<Warehouse> updateWarehouseFromId(@PathVariable int id, @RequestBody Warehouse warehouse) {
+        Warehouse updatedWarehouse = warehouseService.updateWarehouse(id, warehouse);
+        return ResponseEntity.ok(updatedWarehouse);
+    }
+
 }
