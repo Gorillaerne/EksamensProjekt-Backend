@@ -8,12 +8,12 @@ import java.util.Objects;
 @Embeddable
 public class WarehouseProductId implements Serializable {
 
-    private Long warehouseId;
-    private Long productId;
+    private int warehouseId;
+    private int productId;
 
     public WarehouseProductId() {}
 
-    public WarehouseProductId(Long warehouseId, Long productId) {
+    public WarehouseProductId(int warehouseId, int productId) {
         this.warehouseId = warehouseId;
         this.productId = productId;
     }
