@@ -1,5 +1,5 @@
 package gustavo.com.eksamenprojektbackend.Security;
-import gustavo.com.eksamenprojektbackend.Service.UserService;
+import gustavo.com.eksamenprojektbackend.User.Service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,10 +25,6 @@ public class SecurityConfig {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
