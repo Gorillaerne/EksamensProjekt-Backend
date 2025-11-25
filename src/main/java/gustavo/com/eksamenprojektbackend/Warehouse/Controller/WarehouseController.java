@@ -14,7 +14,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("/api/v1/warehouses")
+@RequestMapping("/api/warehouses")
 public class WarehouseController {
 
     private final WarehouseService warehouseService;
@@ -37,6 +37,12 @@ public class WarehouseController {
     @GetMapping("{id}")
     public ResponseEntity<Optional<Warehouse>> getWarehouseById(Authentication authentication, @PathVariable int id){
         return new ResponseEntity<>(warehouseService.getWarehouseById(id), HttpStatus.FOUND);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Warehouse> updateWarehouseFromId(@PathVariable int id, @RequestBody Warehouse warehouse) {
+        Warehouse updatedWarehouse = warehouseService.updateWarehouse(id, warehouse);
+        return ResponseEntity.ok(updatedWarehouse);
     }
 
 }

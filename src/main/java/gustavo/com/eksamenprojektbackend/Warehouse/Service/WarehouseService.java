@@ -29,4 +29,16 @@ public class WarehouseService {
     public Optional<Warehouse> getWarehouseById(int id){
         return warehouseRepository.findById(id);
     }
+
+
+    public Warehouse updateWarehouse(Integer id, Warehouse updatedWarehouse) {
+        Warehouse existingWarehouse = warehouseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Warehouse med id " + id + " blev ikke fundet"));
+
+        existingWarehouse.setName(updatedWarehouse.getName());
+        existingWarehouse.setAddress(updatedWarehouse.getAddress());
+        existingWarehouse.setDescription(updatedWarehouse.getDescription());
+
+        return warehouseRepository.save(existingWarehouse);
+    }
 }
