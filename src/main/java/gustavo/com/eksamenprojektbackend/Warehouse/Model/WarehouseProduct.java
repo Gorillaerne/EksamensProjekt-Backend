@@ -1,7 +1,6 @@
-package gustavo.com.eksamenprojektbackend.Models;
+package gustavo.com.eksamenprojektbackend.Warehouse.Model;
 
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
-import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
