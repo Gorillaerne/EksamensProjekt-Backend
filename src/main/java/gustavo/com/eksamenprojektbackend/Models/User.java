@@ -25,6 +25,9 @@ public class User implements UserDetails {
 
     private String role;
 
+    @Column(unique = true)
+    private String email;
+
 
 
     @Override
@@ -52,6 +55,13 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() { return true; }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public Integer getId() {
         return id;
