@@ -1,6 +1,7 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Service;
 
 
+import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
 import org.springframework.stereotype.Service;
@@ -41,4 +42,5 @@ public class WarehouseService {
 
         return warehouseRepository.save(existingWarehouse);
     }
+
 }
