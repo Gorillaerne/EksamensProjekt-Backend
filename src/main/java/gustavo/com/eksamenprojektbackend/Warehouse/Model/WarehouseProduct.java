@@ -36,5 +36,35 @@ public class WarehouseProduct {
         this.quantity = quantity;
     }
 
-    // getters & setters
+    public WarehouseProductId getId() {
+        return id;
+    }
+
+    public void setId(WarehouseProductId id) {
+        this.id = id;
+    }
+
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
