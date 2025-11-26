@@ -10,9 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "Quality-Assurance"]
+    branches: [ "dev"]
   pull_request:
-    branches: [ "master", "Quality-Assurance"]
+    branches: [ "master", "dev"]
 
 jobs:
   build:
