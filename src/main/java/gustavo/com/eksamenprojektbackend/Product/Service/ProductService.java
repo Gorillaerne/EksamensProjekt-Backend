@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.util.List;
+
 @Service
 public class ProductService {
 
@@ -21,5 +23,9 @@ public class ProductService {
         }catch (Exception e){
             throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Noget gik galt under oprettelse af produkt");
         }
+    }
+
+    public List<Product> getAllProducts(){
+        return productRepostiory.findAll();
     }
 }
