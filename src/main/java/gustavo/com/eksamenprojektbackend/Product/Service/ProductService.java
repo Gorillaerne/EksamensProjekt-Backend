@@ -1,7 +1,10 @@
 package gustavo.com.eksamenprojektbackend.Product.Service;
 
+import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
+import gustavo.com.eksamenprojektbackend.Models.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
+import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
 import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepostiory;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
@@ -17,18 +20,22 @@ import java.util.List;
 @Service
 public class ProductService {
 
+    private final IProductRepository productRepostiory;
+    private final LogService logService;
     private final IWarehouseRepository warehouseRepository;
 
-    private final IProductRepostiory productRepostiory;
 
-    public ProductService(IWarehouseRepository warehouseRepository, IProductRepostiory productRepostiory) {
-        this.warehouseRepository = warehouseRepository;
+    public ProductService(IProductRepository productRepostiory, LogService logService) {
         this.productRepostiory = productRepostiory;
+        this.logService = logService;
     }
 
-    public Product createProduct(Product product) {
+    public Product createProduct(Product product, User user) {
         try {
-            return productRepostiory.save(product);
+            Product createdProduct = productRepostiory.save(product);
+            logService.createLogFromProduct(createdProduct, user, "User: " + user.getUsername() +" | Har oprettet et nyt produkt: " + createdProduct.getName());
+            return createdProduct;
+
         }catch (Exception e){
             throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Noget gik galt under oprettelse af produkt");
         }

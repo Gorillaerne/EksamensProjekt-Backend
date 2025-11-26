@@ -1,4 +1,4 @@
-package gustavo.com.eksamenprojektbackend.Models;
+package gustavo.com.eksamenprojektbackend.Warehouse.Model;
 
 import jakarta.persistence.Embeddable;
 

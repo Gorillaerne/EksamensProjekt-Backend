@@ -21,8 +21,9 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createProduct( @RequestBody Product product){
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
+    public ResponseEntity<?> createProduct(Authentication authentication, @RequestBody Product product) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product, user));
     }
 
     @GetMapping("")
