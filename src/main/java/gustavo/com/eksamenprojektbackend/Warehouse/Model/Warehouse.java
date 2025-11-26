@@ -28,6 +28,7 @@ public class Warehouse {
         this.description = description;
     }
 
+
     public Integer getId() {
         return id;
     }
