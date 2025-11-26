@@ -1,18 +1,22 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Service;
 
-import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepostiory;
-import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
+import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class WarehouseProductExchangeService {
 
-    private final IProductRepostiory productRepostiory;
+    private final IWarehouseProductRepository warehouseProductRepository;
 
-    private final IWarehouseRepository warehouseRepository;
-
-    public WarehouseProductExchangeService(IProductRepostiory productRepostiory, IWarehouseRepository warehouseRepository) {
-        this.productRepostiory = productRepostiory;
-        this.warehouseRepository = warehouseRepository;
+    public WarehouseProductExchangeService(IWarehouseProductRepository warehouseProductRepository) {
+        this.warehouseProductRepository = warehouseProductRepository;
     }
 
-
+    public int getProductQuantity(Integer warehouseId, Integer productId) {
+        return warehouseProductRepository
+                .findByWarehouse_IdAndProduct_Id(warehouseId, productId)
+                .map(WarehouseProduct::getQuantity)
+                .orElse(0);
+    }
 }

@@ -26,6 +26,13 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product, user));
     }
 
+    @RequestMapping("")
+    public ResponseEntity<?> getAllProducts(){
+        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+    }
+
+
+
 
 
 }

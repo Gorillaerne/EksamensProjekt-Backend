@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
+ 
 @Service
 public class WarehouseService {
 
@@ -52,46 +52,49 @@ public class WarehouseService {
     @Transactional
     public WarehouseProductExchangeDTO moveProduct(WarehouseProductExchangeDTO request) {
 
+        // Hent produkt på afsendelseslageret
         WarehouseProduct source = warehouseProductRepository
                 .findByWarehouse_IdAndProduct_Id(
-                        request.getSourceWarehouseId(),
+                        request.getFromWarehouseId(),
                         request.getProductId()
                 )
                 .orElseThrow(() -> new RuntimeException("Produkt findes ikke på kilde-lager"));
 
-        if (source.getQuantity() < request.getAntal()) {
+        // Tjek om der er nok på lager
+        if (source.getQuantity() < request.getAmount()) {
             throw new RuntimeException("Ikke nok på lager til flytning");
         }
 
-        Warehouse targetWarehouse = warehouseRepository.findById(request.getTargetWarehouseId())
+        // Find mål-lager
+        Warehouse targetWarehouse = warehouseRepository.findById(request.getToWarehouseId())
                 .orElseThrow(() -> new RuntimeException("Mål-lager findes ikke"));
 
+        // Find produkt på mål-lager ellers opret det
         WarehouseProduct target = warehouseProductRepository
                 .findByWarehouse_IdAndProduct_Id(
-                        request.getTargetWarehouseId(),
+                        request.getToWarehouseId(),
                         request.getProductId()
                 )
                 .orElseGet(() -> {
-                    WarehouseProduct newWP = new WarehouseProduct();
-                    newWP.setWarehouse(targetWarehouse);
-                    newWP.setProduct(source.getProduct());
-                    newWP.setId(new WarehouseProductId(
-                            request.getTargetWarehouseId(),
+                    WarehouseProduct wp = new WarehouseProduct();
+                    wp.setWarehouse(targetWarehouse);
+                    wp.setProduct(source.getProduct());
+                    wp.setId(new WarehouseProductId(
+                            request.getToWarehouseId(),
                             request.getProductId()
                     ));
-                    newWP.setQuantity(0);
-                    return newWP;
+                    wp.setQuantity(0);
+                    return wp;
                 });
 
-        // Flyt mængde
-        source.setQuantity(source.getQuantity() - request.getAntal());
-        target.setQuantity(target.getQuantity() + request.getAntal());
+        // Flyt antal
+        source.setQuantity(source.getQuantity() - request.getAmount());
+        target.setQuantity(target.getQuantity() + request.getAmount());
 
         warehouseProductRepository.save(source);
         warehouseProductRepository.save(target);
 
-        request.setStatus("SUCCESS");
-        return request;
+        return request; // Kan evt. returnere en SUCCESS message
     }
 
 }
