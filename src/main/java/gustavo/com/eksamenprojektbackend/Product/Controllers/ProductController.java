@@ -1,5 +1,5 @@
 package gustavo.com.eksamenprojektbackend.Product.Controllers;
-import gustavo.com.eksamenprojektbackend.Models.User;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Product.Service.ProductService;
@@ -33,8 +33,7 @@ public class ProductController {
 
     @PostMapping("/delivery")
     public ResponseEntity<?> registerDeliveryOfGoods(@RequestBody List<RegisterDeliveryDTO> deliveryDTOS){
-        productService.registerDeliveryOfGoods(deliveryDTOS);
-        return new ResponseEntity<>("Du har registreret varemodetagelsen", HttpStatus.CREATED);
+        return new ResponseEntity<>(productService.registerDeliveryOfGoods(deliveryDTOS), HttpStatus.CREATED);
     }
 
 

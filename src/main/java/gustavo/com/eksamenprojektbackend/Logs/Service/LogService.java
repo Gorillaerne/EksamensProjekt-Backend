@@ -1,9 +1,8 @@
 package gustavo.com.eksamenprojektbackend.Logs.Service;
 
-import gustavo.com.eksamenprojektbackend.Logs.DTO.LogDTO;
 import gustavo.com.eksamenprojektbackend.Logs.Model.Log;
 import gustavo.com.eksamenprojektbackend.Logs.Repository.ILogRepository;
-import gustavo.com.eksamenprojektbackend.Models.User;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
 import gustavo.com.eksamenprojektbackend.User.Repository.IUserRepository;

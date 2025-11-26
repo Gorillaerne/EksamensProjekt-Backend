@@ -1,15 +1,15 @@
 package gustavo.com.eksamenprojektbackend.Product.Service;
 
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
-import gustavo.com.eksamenprojektbackend.Models.User;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
+import gustavo.com.eksamenprojektbackend.Product.DTO.ResponseDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
-import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepostiory;
-import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
+import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
@@ -22,12 +22,15 @@ public class ProductService {
 
     private final IProductRepository productRepostiory;
     private final LogService logService;
+    private final IWarehouseProductRepository warehouseProductRepository;
     private final IWarehouseRepository warehouseRepository;
 
 
-    public ProductService(IProductRepository productRepostiory, LogService logService) {
+    public ProductService(IProductRepository productRepostiory, LogService logService, IWarehouseProductRepository warehouseProductRepository, IWarehouseRepository warehouseRepository) {
         this.productRepostiory = productRepostiory;
         this.logService = logService;
+        this.warehouseProductRepository = warehouseProductRepository;
+        this.warehouseRepository = warehouseRepository;
     }
 
     public Product createProduct(Product product, User user) {
@@ -46,26 +49,33 @@ public class ProductService {
     }
 
 
-    public List<RegisterDeliveryDTO> registerDeliveryOfGoods(List<RegisterDeliveryDTO> deliveryDTOS) {
-
+    public ResponseDeliveryDTO registerDeliveryOfGoods(List<RegisterDeliveryDTO> deliveryDTOS) {
         if(deliveryDTOS == null || deliveryDTOS.isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingen varer i request");
         }
-
-
         for(RegisterDeliveryDTO dto : deliveryDTOS){
+            WarehouseProductId warehouseProductId = new WarehouseProductId(dto.warehouseId(), dto.productId());
+            WarehouseProduct warehouseProduct;
 
-            Product product = productRepostiory.findById(dto.productId()).orElseThrow(() ->
-                            new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produkter kunne ikke findes")
-                    );
+            if(warehouseProductRepository.existsById(warehouseProductId)) {
+                warehouseProduct = warehouseProductRepository.findById(warehouseProductId).orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ikke findes")
+                );
+                warehouseProduct.setQuantity(warehouseProduct.getQuantity() + dto.quantity());
 
-            Warehouse warehouse = warehouseRepository.findById(dto.warehouseId()).orElseThrow(() ->
-                    new ResponseStatusException(HttpStatus.BAD_REQUEST, "Varehus kunne ikke findes")
-                    );
-
-
+            } else {
+                warehouseProduct = new WarehouseProduct();
+                warehouseProduct.setQuantity(dto.quantity());
+                warehouseProduct.setWarehouse(warehouseRepository.findById(dto.warehouseId()).orElseThrow(()->
+                        new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunne ikke opdatere varehus id")
+                ));
+                warehouseProduct.setProduct(productRepostiory.findById(dto.productId()).orElseThrow(()->
+                        new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunne ikke opdatere produkt id")
+                        ));
+            }
+            warehouseProductRepository.save(warehouseProduct);
         }
-
+        return new ResponseDeliveryDTO("Levering registreret", deliveryDTOS.size());
     }
 
 
