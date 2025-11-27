@@ -2,6 +2,7 @@ package gustavo.com.eksamenprojektbackend.Warehouse.Service;
 
 
 import gustavo.com.eksamenprojektbackend.DTO.WarehouseProductExchangeDTO;
+import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
@@ -10,10 +11,10 @@ import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseReposito
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
- 
+
 @Service
 public class WarehouseService {
 
@@ -54,7 +55,7 @@ public class WarehouseService {
 
         // Hent produkt på afsendelseslageret
         WarehouseProduct source = warehouseProductRepository
-                .findByWarehouse_IdAndProduct_Id(
+                .findByWarehouseIdAndProductId(
                         request.getFromWarehouseId(),
                         request.getProductId()
                 )
@@ -71,7 +72,7 @@ public class WarehouseService {
 
         // Find produkt på mål-lager ellers opret det
         WarehouseProduct target = warehouseProductRepository
-                .findByWarehouse_IdAndProduct_Id(
+                .findByWarehouseIdAndProductId(
                         request.getToWarehouseId(),
                         request.getProductId()
                 )
@@ -95,6 +96,22 @@ public class WarehouseService {
         warehouseProductRepository.save(target);
 
         return request; // Kan evt. returnere en SUCCESS message
+    }
+
+    public List<WarehouseProduct> getAllWarehouseProduct() {
+       return warehouseProductRepository.findAll();
+    }
+
+    public List<WarehouseProduct> getListOfProductsLowOnQty(){
+       List<WarehouseProduct> wpList = getAllWarehouseProduct();
+       List<WarehouseProduct> wpLowQtyList = new ArrayList<>();
+
+       for(WarehouseProduct w : wpList) {
+           if (w.getQuantity() < 50) {
+               wpLowQtyList.add(w);
+           }
+       }
+       return wpLowQtyList;
     }
 
 }

@@ -1,6 +1,8 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Controller;
 
+import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import gustavo.com.eksamenprojektbackend.Warehouse.Service.WarehouseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,6 +46,11 @@ public class WarehouseController {
     public ResponseEntity<Warehouse> updateWarehouseFromId(@PathVariable int id, @RequestBody Warehouse warehouse) {
         Warehouse updatedWarehouse = warehouseService.updateWarehouse(id, warehouse);
         return ResponseEntity.ok(updatedWarehouse);
+    }
+
+    @GetMapping("/lowQty")
+    public ResponseEntity<List<WarehouseProduct>> getProductsLowOnQty(){
+       return new ResponseEntity<>(warehouseService.getListOfProductsLowOnQty(), HttpStatus.OK);
     }
 
 }
