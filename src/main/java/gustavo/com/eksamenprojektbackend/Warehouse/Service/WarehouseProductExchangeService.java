@@ -11,12 +11,10 @@ public class WarehouseProductExchangeService {
 
     private final IWarehouseProductRepository warehouseProductRepository;
     private final IProductRepository productRepostiory;
-
     private final IWarehouseRepository warehouseRepository;
-
-    public WarehouseProductExchangeService(IWarehouseProductRepository warehouseProductRepository) {
+    
+    public WarehouseProductExchangeService(IWarehouseProductRepository warehouseProductRepository, IProductRepository productRepostiory, IWarehouseRepository warehouseRepository) {
         this.warehouseProductRepository = warehouseProductRepository;
-    public WarehouseProductExchangeService(IProductRepository productRepostiory, IWarehouseRepository warehouseRepository) {
         this.productRepostiory = productRepostiory;
         this.warehouseRepository = warehouseRepository;
     }
