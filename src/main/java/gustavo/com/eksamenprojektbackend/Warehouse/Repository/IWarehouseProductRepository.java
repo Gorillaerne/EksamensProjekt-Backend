@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface IWarehouseProductRepository
-        extends JpaRepository<WarehouseProduct, WarehouseProductId> {
+public interface IWarehouseProductRepository extends JpaRepository<WarehouseProduct, WarehouseProductId> {
 
-    Optional<WarehouseProduct> findByWarehouse_IdAndProduct_Id(int warehouseId, int productId);
+    Optional<WarehouseProduct> findByWarehouseIdAndProductId(Integer warehouseId, Integer productId);
 }
+

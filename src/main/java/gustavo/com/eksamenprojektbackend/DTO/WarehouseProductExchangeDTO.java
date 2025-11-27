@@ -2,62 +2,52 @@ package gustavo.com.eksamenprojektbackend.DTO;
 
 public class WarehouseProductExchangeDTO {
 
+    private int productId;
+    private int fromWarehouseId;
+    private int toWarehouseId;
+    private int amount;
 
+    public WarehouseProductExchangeDTO() {
+    }
 
-        private int productId;
-        private int sourceWarehouseId;
-        private int targetWarehouseId;
-        private int antal;
-        private String status;
+    public WarehouseProductExchangeDTO(int productId, int fromWarehouseId, int toWarehouseId, int amount) {
+        this.productId = productId;
+        this.fromWarehouseId = fromWarehouseId;
+        this.toWarehouseId = toWarehouseId;
+        this.amount = amount;
+    }
 
-        public WarehouseProductExchangeDTO(int productId, int sourceWarehouseId,
-                                        int targetWarehouseId, int antal, String status) {
-            this.productId = productId;
-            this.sourceWarehouseId = sourceWarehouseId;
-            this.targetWarehouseId = targetWarehouseId;
-            this.antal = antal;
-            this.status = status;
-        }
-
+    // Getters
     public int getProductId() {
         return productId;
     }
 
+    public int getFromWarehouseId() {
+        return fromWarehouseId;
+    }
+
+    public int getToWarehouseId() {
+        return toWarehouseId;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    // Setters
     public void setProductId(int productId) {
         this.productId = productId;
     }
 
-    public int getSourceWarehouseId() {
-        return sourceWarehouseId;
+    public void setFromWarehouseId(int fromWarehouseId) {
+        this.fromWarehouseId = fromWarehouseId;
     }
 
-    public void setSourceWarehouseId(int sourceWarehouseId) {
-        this.sourceWarehouseId = sourceWarehouseId;
+    public void setToWarehouseId(int toWarehouseId) {
+        this.toWarehouseId = toWarehouseId;
     }
 
-    public int getTargetWarehouseId() {
-        return targetWarehouseId;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
-
-    public void setTargetWarehouseId(int targetWarehouseId) {
-        this.targetWarehouseId = targetWarehouseId;
-    }
-
-    public int getAntal() {
-        return antal;
-    }
-
-    public void setAntal(int antal) {
-        this.antal = antal;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-// getters & setters
-    }
-
+}
