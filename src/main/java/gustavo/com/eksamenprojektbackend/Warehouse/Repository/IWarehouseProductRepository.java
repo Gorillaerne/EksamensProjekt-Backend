@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface IWarehouseProductRepository extends JpaRepository<WarehouseProduct, WarehouseProductId> {
 
-    Optional<WarehouseProduct> findByWarehouse_IdAndProduct_Id(Integer warehouseId, Integer productId);
+    Optional<WarehouseProduct> findByWarehouseIdAndProductId(Integer warehouseId, Integer productId);
 }
 

@@ -15,7 +15,7 @@ public class WarehouseProductExchangeService {
 
     public int getProductQuantity(Integer warehouseId, Integer productId) {
         return warehouseProductRepository
-                .findByWarehouse_IdAndProduct_Id(warehouseId, productId)
+                .findByWarehouseIdAndProductId(warehouseId, productId)
                 .map(WarehouseProduct::getQuantity)
                 .orElse(0);
     }
