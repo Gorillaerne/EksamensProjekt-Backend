@@ -1,6 +1,6 @@
 package gustavo.com.eksamenprojektbackend.Logs.Model;
 
-import gustavo.com.eksamenprojektbackend.Models.User;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import jakarta.persistence.*;
 

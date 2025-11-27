@@ -1,11 +1,7 @@
 package gustavo.com.eksamenprojektbackend.Logs.Controller;
 
-import gustavo.com.eksamenprojektbackend.Logs.DTO.LogDTO;
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 
-import gustavo.com.eksamenprojektbackend.Models.User;
-import org.apache.coyote.Response;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

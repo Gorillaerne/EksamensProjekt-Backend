@@ -1,18 +1,13 @@
 package gustavo.com.eksamenprojektbackend.User.Controller;
 
-import gustavo.com.eksamenprojektbackend.Models.User;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.User.DTO.LoginRequestDTO;
 import gustavo.com.eksamenprojektbackend.User.DTO.UserDTO;
 import gustavo.com.eksamenprojektbackend.User.Service.AuthService;
 import gustavo.com.eksamenprojektbackend.User.Service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
