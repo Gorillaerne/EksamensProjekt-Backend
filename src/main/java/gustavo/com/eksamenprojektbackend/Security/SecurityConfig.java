@@ -37,7 +37,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("api/warehouses/lowQty").permitAll()
                         // Allow login endpoint without authentication
                         .requestMatchers("/api/users/login").permitAll()
                         // All other requests need authentication
