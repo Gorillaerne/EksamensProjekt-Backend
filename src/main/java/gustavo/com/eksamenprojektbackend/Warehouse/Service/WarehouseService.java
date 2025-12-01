@@ -1,21 +1,29 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Service;
 
 
+import gustavo.com.eksamenprojektbackend.DTO.WarehouseProductExchangeDTO;
+import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
+import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class WarehouseService {
 
     private final IWarehouseRepository warehouseRepository;
+    private final IWarehouseProductRepository warehouseProductRepository;
 
-    public WarehouseService(IWarehouseRepository warehouseRepository) {
+    public WarehouseService(IWarehouseRepository warehouseRepository, IWarehouseProductRepository warehouseProductRepository) {
         this.warehouseRepository = warehouseRepository;
+        this.warehouseProductRepository = warehouseProductRepository;
     }
 
     public Warehouse createWarehouse(Warehouse warehouse) {
@@ -41,4 +49,69 @@ public class WarehouseService {
 
         return warehouseRepository.save(existingWarehouse);
     }
+
+    @Transactional
+    public WarehouseProductExchangeDTO moveProduct(WarehouseProductExchangeDTO request) {
+
+        // Hent produkt på afsendelseslageret
+        WarehouseProduct source = warehouseProductRepository
+                .findByWarehouseIdAndProductId(
+                        request.getFromWarehouseId(),
+                        request.getProductId()
+                )
+                .orElseThrow(() -> new RuntimeException("Produkt findes ikke på kilde-lager"));
+
+        // Tjek om der er nok på lager
+        if (source.getQuantity() < request.getAmount()) {
+            throw new RuntimeException("Ikke nok på lager til flytning");
+        }
+
+        // Find mål-lager
+        Warehouse targetWarehouse = warehouseRepository.findById(request.getToWarehouseId())
+                .orElseThrow(() -> new RuntimeException("Mål-lager findes ikke"));
+
+        // Find produkt på mål-lager ellers opret det
+        WarehouseProduct target = warehouseProductRepository
+                .findByWarehouseIdAndProductId(
+                        request.getToWarehouseId(),
+                        request.getProductId()
+                )
+                .orElseGet(() -> {
+                    WarehouseProduct wp = new WarehouseProduct();
+                    wp.setWarehouse(targetWarehouse);
+                    wp.setProduct(source.getProduct());
+                    wp.setId(new WarehouseProductId(
+                            request.getToWarehouseId(),
+                            request.getProductId()
+                    ));
+                    wp.setQuantity(0);
+                    return wp;
+                });
+
+        // Flyt antal
+        source.setQuantity(source.getQuantity() - request.getAmount());
+        target.setQuantity(target.getQuantity() + request.getAmount());
+
+        warehouseProductRepository.save(source);
+        warehouseProductRepository.save(target);
+
+        return request; // Kan evt. returnere en SUCCESS message
+    }
+
+    public List<WarehouseProduct> getAllWarehouseProduct() {
+       return warehouseProductRepository.findAll();
+    }
+
+    public List<WarehouseProduct> getListOfProductsLowOnQty(){
+       List<WarehouseProduct> wpList = getAllWarehouseProduct();
+       List<WarehouseProduct> wpLowQtyList = new ArrayList<>();
+
+       for(WarehouseProduct w : wpList) {
+           if (w.getQuantity() < 50) {
+               wpLowQtyList.add(w);
+           }
+       }
+       return wpLowQtyList;
+    }
+
 }

@@ -1,6 +1,6 @@
 package gustavo.com.eksamenprojektbackend.User.Repository;
 
-import gustavo.com.eksamenprojektbackend.Models.User;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package gustavo.com.eksamenprojektbackend.User.Service;
 
-import gustavo.com.eksamenprojektbackend.Models.User;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.User.DTO.UserDTO;
 import gustavo.com.eksamenprojektbackend.User.Repository.IUserRepository;
 import org.springframework.http.HttpStatus;

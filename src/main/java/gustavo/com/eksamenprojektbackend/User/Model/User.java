@@ -1,4 +1,4 @@
-package gustavo.com.eksamenprojektbackend.Models;
+package gustavo.com.eksamenprojektbackend.User.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
