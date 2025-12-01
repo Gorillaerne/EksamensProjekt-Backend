@@ -2,31 +2,38 @@ package gustavo.com.eksamenprojektbackend.Warehouse.Service;
 
 
 import gustavo.com.eksamenprojektbackend.DTO.WarehouseProductExchangeDTO;
+import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class WarehouseService {
 
     private final IWarehouseRepository warehouseRepository;
     private final IWarehouseProductRepository warehouseProductRepository;
+    private final LogService logService;
 
-    public WarehouseService(IWarehouseRepository warehouseRepository, IWarehouseProductRepository warehouseProductRepository) {
+    public WarehouseService(IWarehouseRepository warehouseRepository, IWarehouseProductRepository warehouseProductRepository, LogService logService) {
         this.warehouseRepository = warehouseRepository;
         this.warehouseProductRepository = warehouseProductRepository;
+        this.logService = logService;
     }
 
-    public Warehouse createWarehouse(Warehouse warehouse) {
+    public Warehouse createWarehouse(Warehouse warehouse, User user) {
+        logService.createLogFromUser(user, "User: " + user.getUsername() +" | Har oprettet et nyt lager: " + warehouse.getName());
         return warehouseRepository.save(warehouse);
     }
 
@@ -39,13 +46,17 @@ public class WarehouseService {
     }
 
 
-    public Warehouse updateWarehouse(Integer id, Warehouse updatedWarehouse) {
+    public Warehouse updateWarehouse(Integer id, Warehouse updatedWarehouse, User user) {
         Warehouse existingWarehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Warehouse med id " + id + " blev ikke fundet"));
 
         existingWarehouse.setName(updatedWarehouse.getName());
         existingWarehouse.setAddress(updatedWarehouse.getAddress());
         existingWarehouse.setDescription(updatedWarehouse.getDescription());
+
+        logService.createLogFromUser(user, "User: " + user.getUsername() +
+                " | Har ændret lageret fra: " + existingWarehouse.getName() + " | " + existingWarehouse.getAddress()  + " | " + existingWarehouse.getDescription() + " -> " +
+                updatedWarehouse.getName() + " | " + updatedWarehouse.getAddress() + " | " + existingWarehouse.getDescription());
 
         return warehouseRepository.save(existingWarehouse);
     }
