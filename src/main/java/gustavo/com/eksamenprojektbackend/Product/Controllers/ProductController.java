@@ -36,5 +36,14 @@ public class ProductController {
         return new ResponseEntity<>(productService.registerDeliveryOfGoods(deliveryDTOS), HttpStatus.CREATED);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @RequestBody Product product){
+        try{
+            Product updatedProduct = productService.updateProduct(id, product);
+            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        } catch (RuntimeException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

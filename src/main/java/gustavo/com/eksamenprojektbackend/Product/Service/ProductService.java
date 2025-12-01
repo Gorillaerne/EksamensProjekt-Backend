@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -78,6 +80,25 @@ public class ProductService {
             warehouseProductRepository.save(warehouseProduct);
         }
         return new ResponseDeliveryDTO("Levering registreret", deliveryDTOS.size());
+    }
+
+    public Product updateProduct(Integer id, Product productRequest){
+        Optional<Product> optionalProduct = productRepostiory.findById(id);
+
+        if(optionalProduct.isEmpty()){
+            throw new RuntimeException("Produktet med dette id kunne ikke findes " + id);
+        }
+
+        Product product = optionalProduct.get();
+
+        product.setName(productRequest.getName());
+        product.setDescription(productRequest.getDescription());
+        product.setPrice(productRequest.getPrice());
+        product.setPicture(productRequest.getPicture());
+        product.setSKU(productRequest.getSKU());
+
+        Product productResponse = productRepostiory.save(product);
+        return productResponse;
     }
 
 
