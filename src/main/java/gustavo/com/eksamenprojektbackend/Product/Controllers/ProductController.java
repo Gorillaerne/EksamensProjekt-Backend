@@ -37,9 +37,20 @@ public class ProductController {
     }
 
     @PostMapping("/delivery")
-    public ResponseEntity<?> registerDeliveryOfGoods(@RequestBody List<RegisterDeliveryDTO> deliveryDTOS){
-        return new ResponseEntity<>(productService.registerDeliveryOfGoods(deliveryDTOS), HttpStatus.CREATED);
+    public ResponseEntity<?> registerDeliveryOfGoods(Authentication authentication, @RequestBody List<RegisterDeliveryDTO> deliveryDTOS){
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(productService.registerDeliveryOfGoods(deliveryDTOS, user), HttpStatus.CREATED);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(Authentication authentication, @PathVariable Integer id, @RequestBody Product product){
+        User user = (User) authentication.getPrincipal();
+        try{
+            Product updatedProduct = productService.updateProduct(id, product, user);
+            return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        } catch (RuntimeException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -54,6 +56,7 @@ public class ProductService {
         List<Product> productList   = productRepostiory.findAll();
 
 
+
         List<SearchBarProductDTO> dtoList = productList.stream()
                 .map(product -> new SearchBarProductDTO(
                         product.getId(),
@@ -69,7 +72,8 @@ public class ProductService {
 
     }
 
-    public ResponseDeliveryDTO registerDeliveryOfGoods(List<RegisterDeliveryDTO> deliveryDTOS) {
+    public ResponseDeliveryDTO registerDeliveryOfGoods(List<RegisterDeliveryDTO> deliveryDTOS, User user) {
+
         if(deliveryDTOS == null || deliveryDTOS.isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingen varer i request");
         }
@@ -93,9 +97,34 @@ public class ProductService {
                         new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunne ikke opdatere produkt id")
                         ));
             }
+            logService.createLogFromUser(user, "User: " + user.getUsername() +
+                    " | Har opdateret warehouse: " + warehouseProduct.getWarehouse().getName() +
+                    " | Med produkt: " + warehouseProduct.getProduct().getName() +
+                    " | Antal: " + warehouseProduct.getQuantity());
+
             warehouseProductRepository.save(warehouseProduct);
         }
         return new ResponseDeliveryDTO("Levering registreret", deliveryDTOS.size());
+    }
+
+    public Product updateProduct(Integer id, Product productRequest, User user){
+        Optional<Product> optionalProduct = productRepostiory.findById(id);
+
+        if(optionalProduct.isEmpty()){
+            throw new RuntimeException("Produktet med dette id kunne ikke findes " + id);
+        }
+
+        Product product = optionalProduct.get();
+
+        product.setName(productRequest.getName());
+        product.setDescription(productRequest.getDescription());
+        product.setPrice(productRequest.getPrice());
+        product.setPicture(productRequest.getPicture());
+        product.setSKU(productRequest.getSKU());
+
+        Product productResponse = productRepostiory.save(product);
+        logService.createLogFromProduct(product,user, "User: " + user.getUsername() +" | Har ændret et nyt produkt: " + productResponse.getName());
+        return productResponse;
     }
 
 

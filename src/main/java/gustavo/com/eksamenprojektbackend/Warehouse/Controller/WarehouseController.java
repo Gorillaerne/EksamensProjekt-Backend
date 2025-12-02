@@ -1,13 +1,14 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Controller;
 
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import gustavo.com.eksamenprojektbackend.Warehouse.Service.WarehouseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;
@@ -29,7 +30,8 @@ public class WarehouseController {
 
     @PostMapping("")
     public ResponseEntity<?> createWarehouse(Authentication authentication, @RequestBody Warehouse warehouse){
-        return new ResponseEntity<>(warehouseService.createWarehouse(warehouse), HttpStatus.CREATED);
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(warehouseService.createWarehouse(warehouse, user), HttpStatus.CREATED);
     }
 
     @RequestMapping("")
@@ -43,8 +45,9 @@ public class WarehouseController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Warehouse> updateWarehouseFromId(@PathVariable int id, @RequestBody Warehouse warehouse) {
-        Warehouse updatedWarehouse = warehouseService.updateWarehouse(id, warehouse);
+    public ResponseEntity<Warehouse> updateWarehouseFromId(Authentication authentication, @PathVariable int id, @RequestBody Warehouse warehouse) {
+        User user = (User) authentication.getPrincipal();
+        Warehouse updatedWarehouse = warehouseService.updateWarehouse(id, warehouse, user);
         return ResponseEntity.ok(updatedWarehouse);
     }
 
