@@ -31,6 +31,11 @@ public class ProductController {
         return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
 
+    @GetMapping("/searchBar")
+    public ResponseEntity<?> getAllProductsForSearchBar(){
+        return new ResponseEntity<>(productService.getAllProductsForSearchBar(), HttpStatus.OK);
+    }
+
     @PostMapping("/delivery")
     public ResponseEntity<?> registerDeliveryOfGoods(Authentication authentication, @RequestBody List<RegisterDeliveryDTO> deliveryDTOS){
         User user = (User) authentication.getPrincipal();
