@@ -21,7 +21,7 @@ public class Product {
     @Column(length = 1000, nullable = false)
     private String description;
 
-    @Column(length = 5000)
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String picture;
 
     @Column(unique = true)
