@@ -1,6 +1,7 @@
 package gustavo.com.eksamenprojektbackend.Product.Service;
 
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
+import gustavo.com.eksamenprojektbackend.Product.DTO.SearchBarProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ResponseDeliveryDTO;
@@ -49,7 +50,24 @@ public class ProductService {
     public List<Product> getAllProducts(){
         return productRepostiory.findAll();
     }
+    public List<SearchBarProductDTO> getAllProductsForSearchBar(){
+        List<Product> productList   = productRepostiory.findAll();
 
+
+        List<SearchBarProductDTO> dtoList = productList.stream()
+                .map(product -> new SearchBarProductDTO(
+                        product.getId(),
+                        product.getName(),
+                        product.getDescription(),
+                        product.getPicture(),
+                        product.getSKU(),
+                        product.getPrice()
+                ))
+                .toList();
+
+        return dtoList;
+
+    }
 
     public ResponseDeliveryDTO registerDeliveryOfGoods(List<RegisterDeliveryDTO> deliveryDTOS) {
         if(deliveryDTOS == null || deliveryDTOS.isEmpty()){
