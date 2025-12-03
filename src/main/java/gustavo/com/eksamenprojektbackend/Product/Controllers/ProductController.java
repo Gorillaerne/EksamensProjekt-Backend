@@ -38,6 +38,7 @@ public class ProductController {
 
     @PostMapping("/delivery")
     public ResponseEntity<?> registerDeliveryOfGoods(Authentication authentication, @RequestBody List<RegisterDeliveryDTO> deliveryDTOS){
+        System.out.println(deliveryDTOS);
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>(productService.registerDeliveryOfGoods(deliveryDTOS, user), HttpStatus.CREATED);
     }

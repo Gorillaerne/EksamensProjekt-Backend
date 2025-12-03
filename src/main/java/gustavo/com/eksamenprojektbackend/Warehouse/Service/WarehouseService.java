@@ -5,6 +5,7 @@ import gustavo.com.eksamenprojektbackend.DTO.WarehouseProductExchangeDTO;
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
+import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseFrontendDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
@@ -39,6 +40,15 @@ public class WarehouseService {
 
     public List<Warehouse> getAllWarehouses(){
         return warehouseRepository.findAll();
+    }
+    public List<WarehouseFrontendDTO> getAllWarehousesForDelivery(){
+
+        List<WarehouseFrontendDTO> dtoList = new ArrayList<>();
+        List<Warehouse> warehouses = warehouseRepository.findAll();
+        for (Warehouse warehouse : warehouses){
+            dtoList.add(new WarehouseFrontendDTO(warehouse.getId(),warehouse.getName()));
+        }
+        return dtoList;
     }
 
     public Optional<Warehouse> getWarehouseById(int id){

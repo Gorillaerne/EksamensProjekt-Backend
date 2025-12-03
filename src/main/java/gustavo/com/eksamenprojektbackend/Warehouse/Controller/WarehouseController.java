@@ -34,17 +34,24 @@ public class WarehouseController {
         return new ResponseEntity<>(warehouseService.createWarehouse(warehouse, user), HttpStatus.CREATED);
     }
 
-    @RequestMapping("")
+    @GetMapping("")
     public ResponseEntity<?> getAllWarehouses(Authentication authentication){
        return new ResponseEntity<>(warehouseService.getAllWarehouses(), HttpStatus.OK);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/dto")
+    public ResponseEntity<?> getAllWarehousesForDeliveryPage(){
+        return new ResponseEntity<>(warehouseService.getAllWarehousesForDelivery(), HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/{id}")
     public ResponseEntity<Optional<Warehouse>> getWarehouseById(Authentication authentication, @PathVariable int id){
         return new ResponseEntity<>(warehouseService.getWarehouseById(id), HttpStatus.FOUND);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Warehouse> updateWarehouseFromId(Authentication authentication, @PathVariable int id, @RequestBody Warehouse warehouse) {
         User user = (User) authentication.getPrincipal();
         Warehouse updatedWarehouse = warehouseService.updateWarehouse(id, warehouse, user);
