@@ -114,24 +114,47 @@ public class ProductService {
         Product product = productRepostiory.findById(id)
                 .orElseThrow(()-> new RuntimeException("Produktet med dette id kunne ikke findes " + id));
 
-        if (productRequest.getName() != null){
+        StringBuilder changes = new StringBuilder();
+
+        product.setName(productRequest.getName());
+
+        if (productRequest.getName() != null ){
             product.setName(productRequest.getName());
+
+            changes.append("navn ændret fra ").append(product.getName()).append(" til ").append(productRequest.getName()).append(". ");
+
         }
+
         if (productRequest.getDescription() != null) {
             product.setDescription(productRequest.getDescription());
+
+            changes.append("beskrivelse ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.getDescription()).append(". ");
+
         }
         if (productRequest.getPrice() != null) {
             product.setPrice(productRequest.getPrice());
+
+            changes.append("pris ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.getPrice()).append(". ");
+
         }
         if (productRequest.getPicture() != null){
             product.setPicture(productRequest.getPicture());
+
+            changes.append("billede ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.getPrice()).append(". ");
+
         }
         if (productRequest.getSKU() != null) {
             product.setSKU(productRequest.getSKU());
+
+            changes.append("SKU ændret fra ").append(product.getSKU()).append(" til ").append(productRequest.getSKU()).append(". ");
         }
 
         Product productResponse = productRepostiory.save(product);
-        logService.createLogFromProduct(product,user, "User: " + user.getUsername() +" | Har ændret et produkt: " + productResponse.getName());
+
+        if (!changes.isEmpty()) {
+            logService.createLogFromProduct(product, user, "User: " + user.getUsername() + "| ændrede producktet. Ændringer: " + changes);
+        }
+
         return productResponse;
     }
 
