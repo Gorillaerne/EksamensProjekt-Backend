@@ -12,6 +12,7 @@ import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
@@ -52,6 +53,7 @@ public class ProductService {
     public List<Product> getAllProducts(){
         return productRepostiory.findAll();
     }
+
     public List<SearchBarProductDTO> getAllProductsForSearchBar(){
         List<Product> productList   = productRepostiory.findAll();
 
@@ -108,25 +110,35 @@ public class ProductService {
         return new ResponseDeliveryDTO("Levering registreret", deliveryDTOS.size());
     }
 
-    public Product updateProduct(Integer id, Product productRequest, User user){
-        Optional<Product> optionalProduct = productRepostiory.findById(id);
+    public Product updateProduct(Integer id, Product productRequest, User user) {
+        Product product = productRepostiory.findById(id)
+                .orElseThrow(()-> new RuntimeException("Produktet med dette id kunne ikke findes " + id));
 
-        if(optionalProduct.isEmpty()){
-            throw new RuntimeException("Produktet med dette id kunne ikke findes " + id);
+        if (productRequest.getName() != null){
+            product.setName(productRequest.getName());
+        }
+        if (productRequest.getDescription() != null) {
+            product.setDescription(productRequest.getDescription());
+        }
+        if (productRequest.getPrice() != null) {
+            product.setPrice(productRequest.getPrice());
+        }
+        if (productRequest.getPicture() != null){
+            product.setPicture(productRequest.getPicture());
+        }
+        if (productRequest.getSKU() != null) {
+            product.setSKU(productRequest.getSKU());
         }
 
-        Product product = optionalProduct.get();
-
-        product.setName(productRequest.getName());
-        product.setDescription(productRequest.getDescription());
-        product.setPrice(productRequest.getPrice());
-        product.setPicture(productRequest.getPicture());
-        product.setSKU(productRequest.getSKU());
-
         Product productResponse = productRepostiory.save(product);
-        logService.createLogFromProduct(product,user, "User: " + user.getUsername() +" | Har ændret et nyt produkt: " + productResponse.getName());
+        logService.createLogFromProduct(product,user, "User: " + user.getUsername() +" | Har ændret et produkt: " + productResponse.getName());
         return productResponse;
     }
 
 
+    public Product getProductById(Integer id) {
+        return productRepostiory.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Produkt ikke fundet"));
+    }
 }

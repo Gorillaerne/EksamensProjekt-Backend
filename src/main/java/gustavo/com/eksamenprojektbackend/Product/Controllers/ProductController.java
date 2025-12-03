@@ -27,12 +27,12 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllProducts(){
+    public ResponseEntity<?> getAllProducts() {
         return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
 
     @GetMapping("/searchBar")
-    public ResponseEntity<?> getAllProductsForSearchBar(){
+    public ResponseEntity<?> getAllProductsForSearchBar() {
         return new ResponseEntity<>(productService.getAllProductsForSearchBar(), HttpStatus.OK);
     }
 
@@ -44,14 +44,21 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(Authentication authentication, @PathVariable Integer id, @RequestBody Product product){
+    public ResponseEntity<Product> updateProduct(Authentication authentication, @PathVariable Integer id, @RequestBody Product product) {
         User user = (User) authentication.getPrincipal();
-        try{
+        try {
             Product updatedProduct = productService.updateProduct(id, product, user);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(Authentication authentication, @PathVariable Integer id) {
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
+    }
+
 
 }
