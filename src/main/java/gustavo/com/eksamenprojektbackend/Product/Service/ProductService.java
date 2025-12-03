@@ -91,6 +91,7 @@ public class ProductService {
 
             } else {
                 warehouseProduct = new WarehouseProduct();
+                warehouseProduct.setId(warehouseProductId);
                 warehouseProduct.setQuantity(dto.quantity());
                 warehouseProduct.setWarehouse(warehouseRepository.findById(dto.warehouseId()).orElseThrow(()->
                         new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunne ikke opdatere varehus id")
