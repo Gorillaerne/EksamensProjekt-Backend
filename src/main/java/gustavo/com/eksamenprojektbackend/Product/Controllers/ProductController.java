@@ -1,4 +1,5 @@
 package gustavo.com.eksamenprojektbackend.Product.Controllers;
+import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
@@ -21,7 +22,7 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createProduct(Authentication authentication, @RequestBody Product product) {
+    public ResponseEntity<?> createProduct(Authentication authentication, @RequestBody ProductDTO product) {
         User user = (User) authentication.getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product, user));
     }
