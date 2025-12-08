@@ -41,11 +41,12 @@ public class ProductService {
         this.warehouseRepository = warehouseRepository;
     }
 
-    public Product createProduct(Product product, User user) {
+    public ProductDTO createProduct(ProductDTO product, User user) {
         try {
-            Product createdProduct = productRepostiory.save(product);
+
+            Product createdProduct = productRepostiory.save(new Product(product.name(),product.description(),product.picture(),product.SKU(),product.price(),new ArrayList<>()));
             logService.createLogFromProduct(createdProduct, user, "User: " + user.getUsername() +" | Har oprettet et nyt produkt: " + createdProduct.getName());
-            return createdProduct;
+            return new ProductDTO(createdProduct.getId(),createdProduct.getName(), createdProduct.getDescription(), createdProduct.getPicture(), createdProduct.getSKU(), createdProduct.getPrice());
 
         }catch (Exception e){
             throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Noget gik galt under oprettelse af produkt");
@@ -57,9 +58,7 @@ public class ProductService {
     }
 
     public List<SearchBarProductDTO> getAllProductsForSearchBar(){
-        List<Product> productList   = productRepostiory.findAll();
-
-
+        List<Product> productList = productRepostiory.findAll();
 
         List<SearchBarProductDTO> dtoList = productList.stream()
                 .map(product -> new SearchBarProductDTO(
@@ -71,9 +70,7 @@ public class ProductService {
                         product.getPrice()
                 ))
                 .toList();
-
         return dtoList;
-
     }
 
     public ResponseDeliveryDTO registerDeliveryOfGoods(List<RegisterDeliveryDTO> deliveryDTOS, User user) {
@@ -168,27 +165,15 @@ public class ProductService {
     }
 
     public List<ProductDTO> getAllProductsDto() {
-
         List<ProductDTO> productDTOList = new ArrayList<>();
-
         List<Product> productList = productRepostiory.findAll();
-
         for (Product product : productList){
-
             int quanity = 0;
-
             for (WarehouseProduct warehouseProduct : product.getWarehouseProductList()){
-
                 quanity += warehouseProduct.getQuantity();
             }
-
-
             productDTOList.add(new ProductDTO(product.getId(), product.getName(), product.getDescription(),product.getPicture(),product.getSKU(),product.getPrice(),quanity));
         }
-
-
-
             return productDTOList;
-
     }
 }

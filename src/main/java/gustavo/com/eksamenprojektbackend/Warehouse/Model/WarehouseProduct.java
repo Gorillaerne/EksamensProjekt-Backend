@@ -1,5 +1,6 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
@@ -12,11 +13,13 @@ public class WarehouseProduct {
     private WarehouseProductId id;
 
     @ManyToOne
+    @JsonBackReference
     @MapsId("warehouseId")
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
     @ManyToOne
+    @JsonBackReference
     @MapsId("productId")
     @JoinColumn(name = "product_id")
     private Product product;

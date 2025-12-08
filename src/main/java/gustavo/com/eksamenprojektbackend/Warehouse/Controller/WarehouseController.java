@@ -2,6 +2,7 @@ package gustavo.com.eksamenprojektbackend.Warehouse.Controller;
 
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
+import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseCreateDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import gustavo.com.eksamenprojektbackend.Warehouse.Service.WarehouseService;
@@ -29,7 +30,7 @@ public class WarehouseController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createWarehouse(Authentication authentication, @RequestBody Warehouse warehouse){
+    public ResponseEntity<?> createWarehouse(Authentication authentication, @RequestBody WarehouseCreateDTO warehouse){
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>(warehouseService.createWarehouse(warehouse, user), HttpStatus.CREATED);
     }
@@ -59,7 +60,7 @@ public class WarehouseController {
     }
 
     @GetMapping("/lowQty")
-    public ResponseEntity<List<WarehouseProduct>> getProductsLowOnQty(){
+    public ResponseEntity<List<WarehouseProductDTO>> getProductsLowOnQty(){
        return new ResponseEntity<>(warehouseService.getListOfProductsLowOnQty(), HttpStatus.OK);
     }
 

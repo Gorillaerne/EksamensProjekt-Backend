@@ -1,5 +1,6 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Warehouse {
     private String description;
 
     @OneToMany(mappedBy = "warehouse")
+    @JsonIgnoreProperties
     List<WarehouseProduct> warehouseProductList = new ArrayList<>();
 
     // JPA kræver tom konstruktør
