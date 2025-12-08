@@ -1,5 +1,6 @@
 package gustavo.com.eksamenprojektbackend.User.Service;
 
+import gustavo.com.eksamenprojektbackend.User.DTO.UserRoleDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.User.DTO.UserDTO;
 import gustavo.com.eksamenprojektbackend.User.Repository.IUserRepository;
@@ -49,4 +50,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public UserRoleDTO getActiveUser(User user) {
+
+        return new UserRoleDTO(user.getRole());
+    }
 }

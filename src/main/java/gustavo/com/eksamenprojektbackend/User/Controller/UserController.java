@@ -1,5 +1,6 @@
 package gustavo.com.eksamenprojektbackend.User.Controller;
 
+import gustavo.com.eksamenprojektbackend.User.DTO.UserRoleDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.User.DTO.LoginRequestDTO;
 import gustavo.com.eksamenprojektbackend.User.DTO.UserDTO;
@@ -7,6 +8,7 @@ import gustavo.com.eksamenprojektbackend.User.Service.AuthService;
 import gustavo.com.eksamenprojektbackend.User.Service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,6 +40,12 @@ public class UserController {
         }
 
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getActiveUser(Authentication authentication){
+            return ResponseEntity.status(HttpStatus.OK).body(userservice.getActiveUser((User) authentication.getPrincipal()));
+    }
+
 
     @PostMapping("")
     public ResponseEntity<?> createUser (@RequestBody UserDTO dto) {
