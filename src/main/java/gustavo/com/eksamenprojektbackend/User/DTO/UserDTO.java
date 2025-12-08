@@ -1,7 +1,7 @@
 package gustavo.com.eksamenprojektbackend.User.DTO;
 
 public class UserDTO {
-    private String Username;
+    private String username;
     private String password;
     private String email;
     private String role;
@@ -31,10 +31,10 @@ public class UserDTO {
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public void setUsername(String username) {
-        Username = username;
+        this.username = username;
     }
 }
