@@ -1,7 +1,7 @@
 package gustavo.com.eksamenprojektbackend.Product.Service;
 
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
-import gustavo.com.eksamenprojektbackend.Product.DTO.SearchBarProductDTO;
+import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ResponseDeliveryDTO;
@@ -12,13 +12,9 @@ import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.swing.text.html.Option;
-import java.util.List;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,13 +50,13 @@ public class ProductService {
         return productRepostiory.findAll();
     }
 
-    public List<SearchBarProductDTO> getAllProductsForSearchBar(){
+    public List<ProductDTO> getAllProductsForSearchBar(){
         List<Product> productList   = productRepostiory.findAll();
 
 
 
-        List<SearchBarProductDTO> dtoList = productList.stream()
-                .map(product -> new SearchBarProductDTO(
+        List<ProductDTO> dtoList = productList.stream()
+                .map(product -> new ProductDTO(
                         product.getId(),
                         product.getName(),
                         product.getDescription(),
@@ -135,10 +131,23 @@ public class ProductService {
         return productResponse;
     }
 
+    public ProductDTO toDTO(Product product){
+        return new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPicture(),
+                product.getSKU(),
+                product.getPrice()
+        );
 
-    public Product getProductById(Integer id) {
-        return productRepostiory.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Produkt ikke fundet"));
     }
+
+
+    public ProductDTO getProductById(Integer id) {
+        Product product = productRepostiory.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produkt ikke fundet"));
+        return toDTO(product);
+    }
+
 }
