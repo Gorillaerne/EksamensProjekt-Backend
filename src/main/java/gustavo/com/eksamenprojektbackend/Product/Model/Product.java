@@ -1,5 +1,7 @@
 package gustavo.com.eksamenprojektbackend.Product.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -35,6 +37,15 @@ public class Product {
     private Double price;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnoreProperties
     List<WarehouseProduct> warehouseProductList = new ArrayList<>();
 
+    public Product(String name, String description, String picture, String SKU, Double price, List<WarehouseProduct> warehouseProductList) {
+        this.name = name;
+        this.description = description;
+        this.picture = picture;
+        this.SKU = SKU;
+        this.price = price;
+        this.warehouseProductList = warehouseProductList;
+    }
 }

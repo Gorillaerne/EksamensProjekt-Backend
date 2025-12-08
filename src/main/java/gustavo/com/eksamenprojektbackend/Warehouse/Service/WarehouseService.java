@@ -5,6 +5,8 @@ import gustavo.com.eksamenprojektbackend.DTO.WarehouseProductExchangeDTO;
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
+import gustavo.com.eksamenprojektbackend.Warehouse.Controller.WarehouseProductDTO;
+import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseCreateDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseFrontendDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
@@ -33,9 +35,9 @@ public class WarehouseService {
         this.logService = logService;
     }
 
-    public Warehouse createWarehouse(Warehouse warehouse, User user) {
-        logService.createLogFromUser(user, "User: " + user.getUsername() +" | Har oprettet et nyt lager: " + warehouse.getName());
-        return warehouseRepository.save(warehouse);
+    public Warehouse createWarehouse(WarehouseCreateDTO warehouse, User user) {
+        logService.createLogFromUser(user, "User: " + user.getUsername() +" | Har oprettet et nyt lager: " + warehouse.name());
+        return warehouseRepository.save(new Warehouse(warehouse.name(), warehouse.address(), warehouse.description()));
     }
 
     public List<Warehouse> getAllWarehouses(){
@@ -132,13 +134,16 @@ public class WarehouseService {
        return warehouseProductRepository.findAll();
     }
 
-    public List<WarehouseProduct> getListOfProductsLowOnQty(){
+    public List<WarehouseProductDTO> getListOfProductsLowOnQty(){
        List<WarehouseProduct> wpList = getAllWarehouseProduct();
-       List<WarehouseProduct> wpLowQtyList = new ArrayList<>();
+       List<WarehouseProductDTO> wpLowQtyList = new ArrayList<>();
 
        for(WarehouseProduct w : wpList) {
            if (w.getQuantity() < 50) {
-               wpLowQtyList.add(w);
+
+
+
+               wpLowQtyList.add(new WarehouseProductDTO(w.getQuantity(),w.getProduct().getName(), w.getWarehouse().getName()));
            }
        }
        return wpLowQtyList;
