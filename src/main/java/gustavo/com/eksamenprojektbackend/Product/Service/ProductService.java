@@ -6,6 +6,7 @@ import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
@@ -36,9 +37,22 @@ public class ProductService {
 
     public ProductDTO createProduct(ProductDTO product, User user) {
         try {
-
             Product createdProduct = productRepository.save(new Product(product.name(),product.description(),product.picture(),product.SKU(),product.price(),new ArrayList<>()));
             logService.createLogFromProduct(createdProduct, user, "User: " + user.getUsername() +" | Har oprettet et nyt produkt: " + createdProduct.getName());
+
+
+            List<WarehouseProduct> warehouseProducts = warehouseRepository.findAll()
+                    .stream()
+                    .map(wp ->
+                            new WarehouseProduct(
+                                    wp,
+                                    createdProduct,
+                                    0
+                            ))
+                    .toList();
+
+                    warehouseProductRepository.saveAll(warehouseProducts);
+
             return new ProductDTO(createdProduct.getId(),createdProduct.getName(), createdProduct.getDescription(), createdProduct.getPicture(), createdProduct.getSKU(), createdProduct.getPrice());
 
         }catch (Exception e){
@@ -168,5 +182,26 @@ public class ProductService {
             productDTOList.add(new ProductDTO(product.getId(), product.getName(), product.getDescription(),product.getPicture(),product.getSKU(),product.getPrice(),quanity));
         }
             return productDTOList;
+    }
+
+    public ProductWithWarehouseDTO getProductWithWarehouseDTO(Integer id) {
+        Product product = getProductById(id);
+
+
+        List<ProductWarehouseDTO> productWarehouseDTOS = product.getWarehouseProductList()
+                .stream()
+                .map(pw->
+                 new ProductWarehouseDTO(pw.getId(), pw.getQuantity(), pw.getWarehouse().getName()))
+                .toList();
+
+
+        return new ProductWithWarehouseDTO(product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPicture(),
+                product.getSKU(),
+                product.getPrice(),
+                productWarehouseDTOS
+                );
     }
 }

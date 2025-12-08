@@ -1,10 +1,14 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Service;
 
+import gustavo.com.eksamenprojektbackend.Warehouse.DTO.PatchWarehouseProductDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
 import org.springframework.stereotype.Service;
 import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
+
+import java.util.Map;
 
 @Service
 public class WarehouseProductExchangeService {
@@ -24,5 +28,15 @@ public class WarehouseProductExchangeService {
                 .findByWarehouseIdAndProductId(warehouseId, productId)
                 .map(WarehouseProduct::getQuantity)
                 .orElse(0);
+    }
+
+    public Object patchWarehouseProduct(PatchWarehouseProductDTO dto) {
+
+        WarehouseProduct wp = warehouseProductRepository.findById( dto.id()
+        ) .orElseThrow(() -> new RuntimeException("Product not found with id "));;
+
+        wp.setQuantity(dto.quantity());
+        warehouseProductRepository.save(wp);
+        return dto;
     }
 }

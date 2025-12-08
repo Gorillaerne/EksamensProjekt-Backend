@@ -1,5 +1,7 @@
 package gustavo.com.eksamenprojektbackend.Product.Controllers;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
+import gustavo.com.eksamenprojektbackend.Product.DTO.ProductWarehouseDTO;
+import gustavo.com.eksamenprojektbackend.Product.DTO.ProductWithWarehouseDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
@@ -39,7 +41,7 @@ public class ProductController {
 
     @GetMapping("/dto")
     public ResponseEntity<?> getAllProductsFor() {
-        return new ResponseEntity<>(productService.getAllProductsForSearchBar(), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getAllProductsDto(), HttpStatus.OK);
     }
 
     @PostMapping("/delivery")
@@ -59,6 +61,12 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductWithWarehouseDTO> getProductWithWarehouseDTO (@PathVariable Integer id){
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductWithWarehouseDTO(id));
+    }
+
     
 
 

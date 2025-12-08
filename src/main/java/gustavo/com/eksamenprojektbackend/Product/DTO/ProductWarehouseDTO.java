@@ -1,4 +1,6 @@
 package gustavo.com.eksamenprojektbackend.Product.DTO;
 
-public record ProductWarehouseDTO () {
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
+
+public record ProductWarehouseDTO (WarehouseProductId id, int quantity, String name) {
 }
