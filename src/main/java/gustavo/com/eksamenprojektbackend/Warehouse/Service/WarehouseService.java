@@ -118,11 +118,11 @@ public class WarehouseService {
         warehouseProductRepository.save(source);
         warehouseProductRepository.save(target);
 
-        logService.createLogFromUser(user,"User: " + user.getUsername() +
-                        " | Har flyttet " + request.getAmount() + " stk af produkt ID " +
-                        request.getProductId() + " fra lager " +
-                        request.getFromWarehouseId() + " til lager " +
-                        request.getToWarehouseId()
+        logService.createLogFromUser(user, "User: " + user.getUsername() +
+                        " | Har flyttet " + request.getAmount() +
+                        " stk. af produkt '" + source.getProduct().getName() +
+                        "' | Fra lager ID: " + request.getFromWarehouseId() +
+                        " til lager ID: " + request.getToWarehouseId()
         );
 
 
