@@ -1,10 +1,12 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Controller;
 
 import gustavo.com.eksamenprojektbackend.DTO.WarehouseProductExchangeDTO;
+import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Warehouse.Service.WarehouseProductExchangeService;
 import gustavo.com.eksamenprojektbackend.Warehouse.Service.WarehouseService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,9 +23,9 @@ public class WarehouseProductexchangeController {
     }
 
     @PostMapping("")
-    public ResponseEntity<WarehouseProductExchangeDTO> flytProdukt(
-            @RequestBody @Valid WarehouseProductExchangeDTO request) {
-        return ResponseEntity.ok(warehouseService.moveProduct(request));
+    public ResponseEntity<WarehouseProductExchangeDTO> flytProdukt(Authentication authentication, @RequestBody @Valid WarehouseProductExchangeDTO request) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(warehouseService.moveProduct(request, user));
     }
 
     @GetMapping("/{warehouseId}/product/{productId}/quantity")
