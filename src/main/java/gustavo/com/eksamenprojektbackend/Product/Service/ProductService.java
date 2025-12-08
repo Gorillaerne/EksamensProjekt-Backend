@@ -2,6 +2,8 @@ package gustavo.com.eksamenprojektbackend.Product.Service;
 
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
+import gustavo.com.eksamenprojektbackend.Product.DTO.SearchBarProductDTO;
+import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ResponseDeliveryDTO;
@@ -15,6 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.List;
 import java.util.Optional;
@@ -110,24 +116,47 @@ public class ProductService {
         Product product = productRepostiory.findById(id)
                 .orElseThrow(()-> new RuntimeException("Produktet med dette id kunne ikke findes " + id));
 
-        if (productRequest.getName() != null){
+        StringBuilder changes = new StringBuilder();
+
+        product.setName(productRequest.getName());
+
+        if (productRequest.getName() != null ){
             product.setName(productRequest.getName());
+
+            changes.append("navn ændret fra ").append(product.getName()).append(" til ").append(productRequest.getName()).append(". ");
+
         }
+
         if (productRequest.getDescription() != null) {
             product.setDescription(productRequest.getDescription());
+
+            changes.append("beskrivelse ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.getDescription()).append(". ");
+
         }
         if (productRequest.getPrice() != null) {
             product.setPrice(productRequest.getPrice());
+
+            changes.append("pris ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.getPrice()).append(". ");
+
         }
         if (productRequest.getPicture() != null){
             product.setPicture(productRequest.getPicture());
+
+            changes.append("billede ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.getPrice()).append(". ");
+
         }
         if (productRequest.getSKU() != null) {
             product.setSKU(productRequest.getSKU());
+
+            changes.append("SKU ændret fra ").append(product.getSKU()).append(" til ").append(productRequest.getSKU()).append(". ");
         }
 
         Product productResponse = productRepostiory.save(product);
-        logService.createLogFromProduct(product,user, "User: " + user.getUsername() +" | Har ændret et produkt: " + productResponse.getName());
+
+        if (!changes.isEmpty()) {
+            logService.createLogFromProduct(product, user, "User: " + user.getUsername() + "| ændrede producktet. Ændringer: " + changes);
+        }
+
         return productResponse;
     }
 
@@ -148,6 +177,31 @@ public class ProductService {
         Product product = productRepostiory.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produkt ikke fundet"));
         return toDTO(product);
+    }
+
+    public List<ProductDTO> getAllProductsDto() {
+
+        List<ProductDTO> productDTOList = new ArrayList<>();
+
+        List<Product> productList = productRepostiory.findAll();
+
+        for (Product product : productList){
+
+            int quanity = 0;
+
+            for (WarehouseProduct warehouseProduct : product.getWarehouseProductList()){
+
+                quanity += warehouseProduct.getQuantity();
+            }
+
+
+            productDTOList.add(new ProductDTO(product.getId(), product.getName(), product.getDescription(),product.getPicture(),product.getSKU(),product.getPrice(),quanity));
+        }
+
+
+
+            return productDTOList;
+
     }
 
 }

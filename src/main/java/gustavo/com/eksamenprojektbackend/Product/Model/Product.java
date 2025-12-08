@@ -1,9 +1,13 @@
 package gustavo.com.eksamenprojektbackend.Product.Model;
 
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,5 +33,8 @@ public class Product {
 
     @Column()
     private Double price;
+
+    @OneToMany(mappedBy = "product")
+    List<WarehouseProduct> warehouseProductList = new ArrayList<>();
 
 }
