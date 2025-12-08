@@ -39,7 +39,7 @@ public class ProductController {
 
     @GetMapping("/dto")
     public ResponseEntity<?> getAllProductsFor() {
-        return new ResponseEntity<>(productService.getAllProductsDto(), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getAllProductsForSearchBar(), HttpStatus.OK);
     }
 
     @PostMapping("/delivery")
@@ -59,14 +59,7 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getProductById(Authentication authentication, @PathVariable Integer id) {
-        User user = (User) authentication.getPrincipal();
-        ProductDTO dto = productService.getProductById(id);
-        return ResponseEntity.ok(dto);
-    }
-
+    
 
 
 

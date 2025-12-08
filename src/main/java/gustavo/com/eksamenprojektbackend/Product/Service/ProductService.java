@@ -1,12 +1,9 @@
 package gustavo.com.eksamenprojektbackend.Product.Service;
 
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
-import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
-import gustavo.com.eksamenprojektbackend.Product.DTO.SearchBarProductDTO;
+import gustavo.com.eksamenprojektbackend.Product.DTO.*;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
-import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
-import gustavo.com.eksamenprojektbackend.Product.DTO.ResponseDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
@@ -56,13 +53,13 @@ public class ProductService {
         return productRepostiory.findAll();
     }
 
-    public List<ProductDTO> getAllProductsForSearchBar(){
+    public List<SearchBarProductDTO> getAllProductsForSearchBar(){
         List<Product> productList   = productRepostiory.findAll();
 
 
 
-        List<ProductDTO> dtoList = productList.stream()
-                .map(product -> new ProductDTO(
+        List<SearchBarProductDTO> dtoList = productList.stream()
+                .map(product -> new SearchBarProductDTO(
                         product.getId(),
                         product.getName(),
                         product.getDescription(),
@@ -158,50 +155,6 @@ public class ProductService {
         }
 
         return productResponse;
-    }
-
-    public ProductDTO toDTO(Product product){
-        return new ProductDTO(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPicture(),
-                product.getSKU(),
-                product.getPrice()
-        );
-
-    }
-
-
-    public ProductDTO getProductById(Integer id) {
-        Product product = productRepostiory.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produkt ikke fundet"));
-        return toDTO(product);
-    }
-
-    public List<ProductDTO> getAllProductsDto() {
-
-        List<ProductDTO> productDTOList = new ArrayList<>();
-
-        List<Product> productList = productRepostiory.findAll();
-
-        for (Product product : productList){
-
-            int quanity = 0;
-
-            for (WarehouseProduct warehouseProduct : product.getWarehouseProductList()){
-
-                quanity += warehouseProduct.getQuantity();
-            }
-
-
-            productDTOList.add(new ProductDTO(product.getId(), product.getName(), product.getDescription(),product.getPicture(),product.getSKU(),product.getPrice(),quanity));
-        }
-
-
-
-            return productDTOList;
-
     }
 
 }
