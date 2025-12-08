@@ -3,9 +3,8 @@ package gustavo.com.eksamenprojektbackend.Warehouse.Service;
 
 import gustavo.com.eksamenprojektbackend.DTO.WarehouseProductExchangeDTO;
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
-import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
-import gustavo.com.eksamenprojektbackend.Warehouse.Controller.WarehouseProductDTO;
+import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseProductDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseCreateDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseFrontendDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;

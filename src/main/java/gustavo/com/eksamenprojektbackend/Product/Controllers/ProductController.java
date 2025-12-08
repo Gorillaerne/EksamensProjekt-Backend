@@ -1,5 +1,7 @@
 package gustavo.com.eksamenprojektbackend.Product.Controllers;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
+import gustavo.com.eksamenprojektbackend.Product.DTO.ProductWarehouseDTO;
+import gustavo.com.eksamenprojektbackend.Product.DTO.ProductWithWarehouseDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
@@ -61,10 +63,12 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(Authentication authentication, @PathVariable Integer id) {
-        User user = (User) authentication.getPrincipal();
-        return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
+    public ResponseEntity<ProductWithWarehouseDTO> getProductWithWarehouseDTO (@PathVariable Integer id){
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductWithWarehouseDTO(id));
     }
+
+    
+
 
 
 }

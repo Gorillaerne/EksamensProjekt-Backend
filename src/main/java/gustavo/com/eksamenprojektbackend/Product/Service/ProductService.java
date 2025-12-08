@@ -1,41 +1,35 @@
 package gustavo.com.eksamenprojektbackend.Product.Service;
 
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
+import gustavo.com.eksamenprojektbackend.Product.DTO.*;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
-import gustavo.com.eksamenprojektbackend.Product.DTO.SearchBarProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
-import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
-import gustavo.com.eksamenprojektbackend.Product.DTO.ResponseDeliveryDTO;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
+import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
 
-    private final IProductRepository productRepostiory;
+    private final IProductRepository productRepository;
     private final LogService logService;
     private final IWarehouseProductRepository warehouseProductRepository;
     private final IWarehouseRepository warehouseRepository;
 
 
-    public ProductService(IProductRepository productRepostiory, LogService logService, IWarehouseProductRepository warehouseProductRepository, IWarehouseRepository warehouseRepository) {
-        this.productRepostiory = productRepostiory;
+    public ProductService(IProductRepository productRepository, LogService logService, IWarehouseProductRepository warehouseProductRepository, IWarehouseRepository warehouseRepository) {
+        this.productRepository = productRepository;
         this.logService = logService;
         this.warehouseProductRepository = warehouseProductRepository;
         this.warehouseRepository = warehouseRepository;
@@ -43,9 +37,22 @@ public class ProductService {
 
     public ProductDTO createProduct(ProductDTO product, User user) {
         try {
-
-            Product createdProduct = productRepostiory.save(new Product(product.name(),product.description(),product.picture(),product.SKU(),product.price(),new ArrayList<>()));
+            Product createdProduct = productRepository.save(new Product(product.name(),product.description(),product.picture(),product.SKU(),product.price(),new ArrayList<>()));
             logService.createLogFromProduct(createdProduct, user, "User: " + user.getUsername() +" | Har oprettet et nyt produkt: " + createdProduct.getName());
+
+
+            List<WarehouseProduct> warehouseProducts = warehouseRepository.findAll()
+                    .stream()
+                    .map(wp ->
+                            new WarehouseProduct(
+                                    wp,
+                                    createdProduct,
+                                    0
+                            ))
+                    .toList();
+
+                    warehouseProductRepository.saveAll(warehouseProducts);
+
             return new ProductDTO(createdProduct.getId(),createdProduct.getName(), createdProduct.getDescription(), createdProduct.getPicture(), createdProduct.getSKU(), createdProduct.getPrice());
 
         }catch (Exception e){
@@ -54,11 +61,11 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts(){
-        return productRepostiory.findAll();
+        return productRepository.findAll();
     }
 
     public List<SearchBarProductDTO> getAllProductsForSearchBar(){
-        List<Product> productList = productRepostiory.findAll();
+        List<Product> productList = productRepository.findAll();
 
         List<SearchBarProductDTO> dtoList = productList.stream()
                 .map(product -> new SearchBarProductDTO(
@@ -95,7 +102,7 @@ public class ProductService {
                 warehouseProduct.setWarehouse(warehouseRepository.findById(dto.warehouseId()).orElseThrow(()->
                         new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunne ikke opdatere varehus id")
                 ));
-                warehouseProduct.setProduct(productRepostiory.findById(dto.productId()).orElseThrow(()->
+                warehouseProduct.setProduct(productRepository.findById(dto.productId()).orElseThrow(()->
                         new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunne ikke opdatere produkt id")
                         ));
             }
@@ -110,7 +117,7 @@ public class ProductService {
     }
 
     public Product updateProduct(Integer id, Product productRequest, User user) {
-        Product product = productRepostiory.findById(id)
+        Product product = productRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Produktet med dette id kunne ikke findes " + id));
 
         StringBuilder changes = new StringBuilder();
@@ -148,7 +155,7 @@ public class ProductService {
             changes.append("SKU ændret fra ").append(product.getSKU()).append(" til ").append(productRequest.getSKU()).append(". ");
         }
 
-        Product productResponse = productRepostiory.save(product);
+        Product productResponse = productRepository.save(product);
 
         if (!changes.isEmpty()) {
             logService.createLogFromProduct(product, user, "User: " + user.getUsername() + "| ændrede producktet. Ændringer: " + changes);
@@ -159,14 +166,14 @@ public class ProductService {
 
 
     public Product getProductById(Integer id) {
-        return productRepostiory.findById(id)
+        return productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Produkt ikke fundet"));
     }
 
     public List<ProductDTO> getAllProductsDto() {
         List<ProductDTO> productDTOList = new ArrayList<>();
-        List<Product> productList = productRepostiory.findAll();
+        List<Product> productList = productRepository.findAll();
         for (Product product : productList){
             int quanity = 0;
             for (WarehouseProduct warehouseProduct : product.getWarehouseProductList()){
@@ -175,5 +182,26 @@ public class ProductService {
             productDTOList.add(new ProductDTO(product.getId(), product.getName(), product.getDescription(),product.getPicture(),product.getSKU(),product.getPrice(),quanity));
         }
             return productDTOList;
+    }
+
+    public ProductWithWarehouseDTO getProductWithWarehouseDTO(Integer id) {
+        Product product = getProductById(id);
+
+
+        List<ProductWarehouseDTO> productWarehouseDTOS = product.getWarehouseProductList()
+                .stream()
+                .map(pw->
+                 new ProductWarehouseDTO(pw.getId(), pw.getQuantity(), pw.getWarehouse().getName()))
+                .toList();
+
+
+        return new ProductWithWarehouseDTO(product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPicture(),
+                product.getSKU(),
+                product.getPrice(),
+                productWarehouseDTOS
+                );
     }
 }
