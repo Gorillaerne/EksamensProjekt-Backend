@@ -1,8 +1,15 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "warehouse")
 public class Warehouse {
 
@@ -18,6 +25,9 @@ public class Warehouse {
     @Column(length = 99999999)
     private String description;
 
+    @OneToMany(mappedBy = "warehouse")
+    List<WarehouseProduct> warehouseProductList = new ArrayList<>();
+
     // JPA kræver tom konstruktør
     public Warehouse() {
     }
@@ -27,37 +37,6 @@ public class Warehouse {
         this.address = address;
         this.description = description;
     }
-
-
-    public Integer getId() {
-        return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-}

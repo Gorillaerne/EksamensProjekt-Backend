@@ -1,6 +1,7 @@
 package gustavo.com.eksamenprojektbackend.Product.Service;
 
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
+import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
 import gustavo.com.eksamenprojektbackend.Product.DTO.SearchBarProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.DTO.RegisterDeliveryDTO;
@@ -18,6 +19,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.List;
@@ -163,5 +165,30 @@ public class ProductService {
         return productRepostiory.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Produkt ikke fundet"));
+    }
+
+    public List<ProductDTO> getAllProductsDto() {
+
+        List<ProductDTO> productDTOList = new ArrayList<>();
+
+        List<Product> productList = productRepostiory.findAll();
+
+        for (Product product : productList){
+
+            int quanity = 0;
+
+            for (WarehouseProduct warehouseProduct : product.getWarehouseProductList()){
+
+                quanity += warehouseProduct.getQuantity();
+            }
+
+
+            productDTOList.add(new ProductDTO(product.getId(), product.getName(), product.getDescription(),product.getPicture(),product.getSKU(),product.getPrice(),quanity));
+        }
+
+
+
+            return productDTOList;
+
     }
 }
