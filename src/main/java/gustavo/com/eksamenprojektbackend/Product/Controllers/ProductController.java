@@ -64,6 +64,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductWithWarehouseDTO> getProductWithWarehouseDTO (@PathVariable Integer id){
+        System.out.println(productService.getProductWithWarehouseDTO(id));
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductWithWarehouseDTO(id));
     }
 

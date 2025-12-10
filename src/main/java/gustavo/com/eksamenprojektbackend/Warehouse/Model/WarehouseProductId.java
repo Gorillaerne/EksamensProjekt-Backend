@@ -1,10 +1,14 @@
 package gustavo.com.eksamenprojektbackend.Warehouse.Model;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
 @Embeddable
 public class WarehouseProductId implements Serializable {
 
@@ -33,4 +37,14 @@ public class WarehouseProductId implements Serializable {
     public int hashCode() {
         return Objects.hash(warehouseId, productId);
     }
+
+    @Override
+    public String toString() {
+        return "WarehouseProductId{" +
+                "warehouseId=" + warehouseId +
+                ", productId=" + productId +
+                '}';
+    }
+
+
 }
