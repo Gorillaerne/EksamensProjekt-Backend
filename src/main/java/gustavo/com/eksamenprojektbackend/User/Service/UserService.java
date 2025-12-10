@@ -54,4 +54,9 @@ public class UserService implements UserDetailsService {
 
         return new UserRoleDTO(user.getRole());
     }
+
+    public void deleteUser(int id) {
+        userRepository.deleteById(id);
+
+    }
 }

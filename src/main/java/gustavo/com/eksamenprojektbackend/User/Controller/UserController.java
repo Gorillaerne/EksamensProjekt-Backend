@@ -24,6 +24,13 @@ public class UserController {
         this.authService = authService;
     }
 
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable int id){
+        userservice.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @GetMapping("")
     public ResponseEntity<?> GetAllUsers() {
         return new ResponseEntity<>(userservice.getAll(), HttpStatus.OK);
