@@ -2,6 +2,7 @@ package gustavo.com.eksamenprojektbackend.Security;
 import gustavo.com.eksamenprojektbackend.User.Service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -39,8 +40,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Allow login endpoint without authentication
                         .requestMatchers("/api/users/login").permitAll()
-                        .requestMatchers("/api/users/me").hasAnyRole("ADMIN","USER")
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
+                        .requestMatchers("/api/users/me").hasAnyRole("ADMIN","USER")
                         .requestMatchers("/api/logs/**").hasRole("ADMIN")
                         // All other requests need authentication
                         .anyRequest().authenticated()
