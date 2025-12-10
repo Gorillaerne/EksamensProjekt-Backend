@@ -4,6 +4,8 @@ review:
   auto_review: true
   on_open: true
   on_push: true
+  auto_review_branches:
+    - "*"   # run on all branches
   file_inclusions:
     - "**/*"   # review all files
   max_files: 5000
