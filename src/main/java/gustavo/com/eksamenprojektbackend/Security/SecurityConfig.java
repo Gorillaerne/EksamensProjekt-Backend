@@ -2,6 +2,7 @@ package gustavo.com.eksamenprojektbackend.Security;
 import gustavo.com.eksamenprojektbackend.User.Service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -16,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@Profile("dev")
 public class SecurityConfig {
 
     private final UserService userDetailsService;
@@ -43,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/users/me").hasAnyRole("ADMIN","USER")
                         .requestMatchers("/api/logs/**").hasRole("ADMIN")
+                        .requestMatchers("/h2-console/**").permitAll()
                         // All other requests need authentication
                         .anyRequest().authenticated()
                 )

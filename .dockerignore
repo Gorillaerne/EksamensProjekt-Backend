@@ -35,7 +35,7 @@ README.md
 **/*.iml
 **/*.ipr
 **/*.iws
-**/*.log
+**/*.logs
 **/.apt_generated
 **/.gradle
 **/.gradletasknamecache

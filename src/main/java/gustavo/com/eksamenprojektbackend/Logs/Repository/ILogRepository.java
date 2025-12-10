@@ -1,13 +1,13 @@
 package gustavo.com.eksamenprojektbackend.Logs.Repository;
 
-import gustavo.com.eksamenprojektbackend.Logs.Model.Log;
+import gustavo.com.eksamenprojektbackend.Logs.Model.Logs;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ILogRepository extends JpaRepository<Log, Integer> {
+public interface ILogRepository extends JpaRepository<Logs, Integer> {
 
-    List<Log> findByUserId(int userId);
+    List<Logs> findByUserId(int userId);
 
-    List<Log> findByProductId(int productId);
+    List<Logs> findByProductId(int productId);
 }
