@@ -38,7 +38,7 @@ public class ProductService {
     public ProductDTO createProduct(ProductDTO product, User user) {
         try {
             Product createdProduct = productRepository.save(new Product(product.name(),product.description(),product.picture(),product.SKU(),product.price(),new ArrayList<>()));
-            logService.createLogFromProduct(createdProduct, user, "User: " + user.getUsername() +" | Har oprettet et nyt produkt: " + createdProduct.getName());
+            logService.createLogFromProduct(createdProduct, user, "Oprettet nyt produkt: " + createdProduct.getName());
 
 
             List<WarehouseProduct> warehouseProducts = warehouseRepository.findAll()
@@ -106,8 +106,8 @@ public class ProductService {
                         new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kunne ikke opdatere produkt id")
                         ));
             }
-            logService.createLogFromUser(user, "User: " + user.getUsername() +
-                    " | Har opdateret warehouse: " + warehouseProduct.getWarehouse().getName() +
+            logService.createLogFromUser(user,
+                    "Opdateret warehouse: " + warehouseProduct.getWarehouse().getName() +
                     " | Med produkt: " + warehouseProduct.getProduct().getName() +
                     " | Antal: " + warehouseProduct.getQuantity());
 
@@ -154,7 +154,7 @@ public class ProductService {
         Product productResponse = productRepository.save(product);
 
         if (!changes.isEmpty()) {
-            logService.createLogFromProduct(product, user, "User: " + user.getUsername() + "| ændrede producktet. Ændringer: " + changes);
+            logService.createLogFromProduct(product, user, "Ændrede for produkt: " + changes);
         }
 
         return productResponse;
