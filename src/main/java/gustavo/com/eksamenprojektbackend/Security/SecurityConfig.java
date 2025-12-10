@@ -40,8 +40,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Allow login endpoint without authentication
                         .requestMatchers("/api/users/login").permitAll()
-                        .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/users/me").hasAnyRole("ADMIN","USER")
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/logs/**").hasRole("ADMIN")
                         // All other requests need authentication
                         .anyRequest().authenticated()

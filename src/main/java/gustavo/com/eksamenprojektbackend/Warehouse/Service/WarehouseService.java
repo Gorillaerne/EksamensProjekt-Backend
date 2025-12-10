@@ -3,6 +3,8 @@ package gustavo.com.eksamenprojektbackend.Warehouse.Service;
 
 import gustavo.com.eksamenprojektbackend.DTO.WarehouseProductExchangeDTO;
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
+import gustavo.com.eksamenprojektbackend.Product.Model.Product;
+import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseProductDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseCreateDTO;
@@ -27,16 +29,30 @@ public class WarehouseService {
     private final IWarehouseRepository warehouseRepository;
     private final IWarehouseProductRepository warehouseProductRepository;
     private final LogService logService;
+    private final IProductRepository iProductRepository;
 
-    public WarehouseService(IWarehouseRepository warehouseRepository, IWarehouseProductRepository warehouseProductRepository, LogService logService) {
+
+    public WarehouseService(IWarehouseRepository warehouseRepository, IWarehouseProductRepository warehouseProductRepository, LogService logService, IProductRepository iProductRepository) {
         this.warehouseRepository = warehouseRepository;
         this.warehouseProductRepository = warehouseProductRepository;
         this.logService = logService;
+        this.iProductRepository = iProductRepository;
     }
 
     public Warehouse createWarehouse(WarehouseCreateDTO warehouse, User user) {
         logService.createLogFromUser(user, "User: " + user.getUsername() +" | Har oprettet et nyt lager: " + warehouse.name());
-        return warehouseRepository.save(new Warehouse(warehouse.name(), warehouse.address(), warehouse.description()));
+        Warehouse savedWarehouse = warehouseRepository.save(new Warehouse(warehouse.name(), warehouse.address(), warehouse.description()));
+
+        List<Product> products = iProductRepository.findAll();
+        List<WarehouseProduct> wp = new ArrayList<>();
+
+        for(Product product : products){
+             wp.add(new WarehouseProduct(savedWarehouse, product, 0));
+        }
+
+        warehouseProductRepository.saveAll(wp);
+
+        return savedWarehouse;
     }
 
     public List<Warehouse> getAllWarehouses(){

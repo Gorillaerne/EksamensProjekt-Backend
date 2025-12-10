@@ -33,7 +33,7 @@ public class WarehouseProductExchangeService {
     public Object patchWarehouseProduct(PatchWarehouseProductDTO dto) {
 
         WarehouseProduct wp = warehouseProductRepository.findById( dto.id()
-        ) .orElseThrow(() -> new RuntimeException("Product not found with id "));;
+        ) .orElseThrow(() -> new RuntimeException("Produktet blev ikke fundet med id: " + dto.id()));;
 
         wp.setQuantity(dto.quantity());
         warehouseProductRepository.save(wp);

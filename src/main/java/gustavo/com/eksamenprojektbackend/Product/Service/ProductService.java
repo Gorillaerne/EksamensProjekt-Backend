@@ -116,43 +116,39 @@ public class ProductService {
         return new ResponseDeliveryDTO("Levering registreret", deliveryDTOS.size());
     }
 
-    public Product updateProduct(Integer id, Product productRequest, User user) {
+    public Product updateProduct(Integer id, ProductDTO productRequest, User user) {
         Product product = productRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Produktet med dette id kunne ikke findes " + id));
 
         StringBuilder changes = new StringBuilder();
 
-        product.setName(productRequest.getName());
+        if (productRequest.name() != null ){
+            product.setName(productRequest.name());
 
-        if (productRequest.getName() != null ){
-            product.setName(productRequest.getName());
-
-            changes.append("navn ændret fra ").append(product.getName()).append(" til ").append(productRequest.getName()).append(". ");
-
+            changes.append("navn ændret fra ").append(product.getName()).append(" til ").append(productRequest.name()).append(". ");
         }
 
-        if (productRequest.getDescription() != null) {
-            product.setDescription(productRequest.getDescription());
+        if (productRequest.description() != null) {
+            product.setDescription(productRequest.description());
 
-            changes.append("beskrivelse ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.getDescription()).append(". ");
+            changes.append("beskrivelse ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.description()).append(". ");
+        }
+        if (productRequest.price() != null) {
+            product.setPrice(productRequest.price());
+
+            changes.append("pris ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.price()).append(". ");
 
         }
-        if (productRequest.getPrice() != null) {
-            product.setPrice(productRequest.getPrice());
+        if (productRequest.picture() != null){
+            product.setPicture(productRequest.picture());
 
-            changes.append("pris ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.getPrice()).append(". ");
-
-        }
-        if (productRequest.getPicture() != null){
-            product.setPicture(productRequest.getPicture());
-
-            changes.append("billede ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.getPrice()).append(". ");
+            changes.append("billede ændret fra ").append(product.getDescription()).append(" til ").append(productRequest.price()).append(". ");
 
         }
-        if (productRequest.getSKU() != null) {
-            product.setSKU(productRequest.getSKU());
+        if (productRequest.SKU() != null) {
+            product.setSKU(productRequest.SKU());
 
-            changes.append("SKU ændret fra ").append(product.getSKU()).append(" til ").append(productRequest.getSKU()).append(". ");
+            changes.append("SKU ændret fra ").append(product.getSKU()).append(" til ").append(productRequest.SKU()).append(". ");
         }
 
         Product productResponse = productRepository.save(product);

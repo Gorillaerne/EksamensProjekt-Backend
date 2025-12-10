@@ -21,9 +21,9 @@ public class WarehouseProductController {
         this.warehouseProductExchangeService = warehouseProductExchangeService;
     }
 
-    @PatchMapping("/")
+    @PatchMapping("")
     public ResponseEntity<?> patchWarehouseProduct(@RequestBody PatchWarehouseProductDTO dto){
-        return ResponseEntity.status(HttpStatus.OK).body(warehouseProductExchangeService.patchWarehouseProduct( dto));
+        return ResponseEntity.status(HttpStatus.OK).body(warehouseProductExchangeService.patchWarehouseProduct(dto));
     }
 
 
