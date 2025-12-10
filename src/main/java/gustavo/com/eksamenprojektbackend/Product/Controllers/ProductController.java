@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(Authentication authentication, @PathVariable Integer id, @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(Authentication authentication, @PathVariable Integer id, @RequestBody ProductDTO product) {
         User user = (User) authentication.getPrincipal();
         try {
             Product updatedProduct = productService.updateProduct(id, product, user);
