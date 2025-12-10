@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class Log {
+public class Logs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class Log {
 
     private String action;
 
-    public Log() {
+    public Logs() {
     }
 
     public Integer getId() {

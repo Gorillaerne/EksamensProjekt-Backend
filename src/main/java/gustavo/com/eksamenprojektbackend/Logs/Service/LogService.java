@@ -1,6 +1,6 @@
 package gustavo.com.eksamenprojektbackend.Logs.Service;
 
-import gustavo.com.eksamenprojektbackend.Logs.Model.Log;
+import gustavo.com.eksamenprojektbackend.Logs.Model.Logs;
 import gustavo.com.eksamenprojektbackend.Logs.Repository.ILogRepository;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
@@ -25,39 +25,39 @@ public class LogService {
 
     }
 
-    public List<Log> getAll() {
+    public List<Logs> getAll() {
         return logRepository.findAll();
     }
 
-    public List<Log> getLogsByUserID(int userID) {
+    public List<Logs> getLogsByUserID(int userID) {
         userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
         return logRepository.findByUserId(userID);
         
     }
 
-    public List<Log> getLogsByProductID(int productID) {
+    public List<Logs> getLogsByProductID(int productID) {
         return logRepository.findByProductId(productID);
     }
 
-    public Log createLogFromUser(User user, String message) {
+    public Logs createLogFromUser(User user, String message) {
 
-        Log log = new Log();
-        log.setUser(user);
-        log.setAction(message);
-        log.setTimeStamp(LocalDateTime.now());
+        Logs logs = new Logs();
+        logs.setUser(user);
+        logs.setAction(message);
+        logs.setTimeStamp(LocalDateTime.now());
 
-        return logRepository.save(log);
+        return logRepository.save(logs);
     }
 
-    public Log createLogFromProduct(Product product, User user, String message) {
+    public Logs createLogFromProduct(Product product, User user, String message) {
 
-        Log log = new Log();
-        log.setProduct(product);
-        log.setUser(user);
-        log.setAction(message);
-        log.setTimeStamp(LocalDateTime.now());
+        Logs logs = new Logs();
+        logs.setProduct(product);
+        logs.setUser(user);
+        logs.setAction(message);
+        logs.setTimeStamp(LocalDateTime.now());
 
-        Log saved = logRepository.save(log);
+        Logs saved = logRepository.save(logs);
 
         return saved;
 
