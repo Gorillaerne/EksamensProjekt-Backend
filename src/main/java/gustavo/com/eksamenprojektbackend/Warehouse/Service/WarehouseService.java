@@ -65,8 +65,8 @@ public class WarehouseService {
         existingWarehouse.setAddress(updatedWarehouse.getAddress());
         existingWarehouse.setDescription(updatedWarehouse.getDescription());
 
-        logService.createLogFromUser(user, "User: " + user.getUsername() +
-                " | Har ændret lageret fra: " + existingWarehouse.getName() + " | " + existingWarehouse.getAddress()  + " | " + existingWarehouse.getDescription() + " -> " +
+        logService.createLogFromUser(user,
+                "Ændret lageret fra: " + existingWarehouse.getName() + " | " + existingWarehouse.getAddress()  + " | " + existingWarehouse.getDescription() + " -> " +
                 updatedWarehouse.getName() + " | " + updatedWarehouse.getAddress() + " | " + existingWarehouse.getDescription());
 
         return warehouseRepository.save(existingWarehouse);
@@ -117,8 +117,8 @@ public class WarehouseService {
         warehouseProductRepository.save(source);
         warehouseProductRepository.save(target);
 
-        logService.createLogFromUser(user, "User: " + user.getUsername() +
-                        " | Har flyttet " + request.getAmount() +
+        logService.createLogFromUser(user,
+                        "Har flyttet " + request.getAmount() +
                         " stk. af produkt '" + source.getProduct().getName() +
                         "' | Fra lager ID: " + request.getFromWarehouseId() +
                         " til lager ID: " + request.getToWarehouseId()
