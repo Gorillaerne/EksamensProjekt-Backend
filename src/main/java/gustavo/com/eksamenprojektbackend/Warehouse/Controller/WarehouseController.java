@@ -2,9 +2,11 @@ package gustavo.com.eksamenprojektbackend.Warehouse.Controller;
 
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseCreateDTO;
+import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseProductDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Service.WarehouseService;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -44,14 +46,13 @@ public class WarehouseController {
     }
 
 
-
     @GetMapping("/{id}")
     public ResponseEntity<Warehouse> getWarehouseById(Authentication authentication, @PathVariable int id){
         return new ResponseEntity<>(warehouseService.getWarehouseById(id), HttpStatus.FOUND);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Warehouse> updateWarehouseFromId(Authentication authentication, @PathVariable int id, @RequestBody Warehouse warehouse) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Warehouse> updateWarehouseFromId(Authentication authentication, @PathVariable int id, @RequestBody WarehouseDTO warehouse) {
         User user = (User) authentication.getPrincipal();
         Warehouse updatedWarehouse = warehouseService.updateWarehouse(id, warehouse, user);
         return ResponseEntity.ok(updatedWarehouse);
@@ -60,6 +61,13 @@ public class WarehouseController {
     @GetMapping("/lowQty")
     public ResponseEntity<List<WarehouseProductDTO>> getProductsLowOnQty(){
        return new ResponseEntity<>(warehouseService.getListOfProductsLowOnQty(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteWarehouse(Authentication authentication, @PathVariable int id) {
+        User user = (User) authentication.getPrincipal();
+        warehouseService.deleteWarehouse(id, user);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

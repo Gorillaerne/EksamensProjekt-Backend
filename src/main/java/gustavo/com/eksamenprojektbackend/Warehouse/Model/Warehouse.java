@@ -26,7 +26,7 @@ public class Warehouse {
     @Column(length = 99999999)
     private String description;
 
-    @OneToMany(mappedBy = "warehouse")
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnoreProperties
     List<WarehouseProduct> warehouseProductList = new ArrayList<>();
 
