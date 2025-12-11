@@ -55,6 +55,3 @@ Dette robuste backend-system er udviklet af:
 
 **Bygget med 🦍 af Team Gorillaerne for Elvang.** Lagerstyring har aldrig været så organiseret og sjovt! 🎉
 
----
-
-Har du brug for, at jeg tilføjer et afsnit om, hvordan man kører eller konfigurerer backend-applikationen lokalt?
