@@ -183,7 +183,7 @@ public class ProductService {
 
         if (productRequest.picture() != null && !productRequest.picture().equals(oldPicture)) {
             product.setPicture(productRequest.picture());
-            changes.append("billede ændret fra ").append(oldPicture).append(" til ").append(productRequest.picture()).append(". ");
+            changes.append("billede er ændret");
         }
 
         if (productRequest.SKU() != null && !productRequest.SKU().equals(oldSKU)) {
