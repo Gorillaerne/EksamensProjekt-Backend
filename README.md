@@ -19,15 +19,6 @@ Velkommen til **Elvang LagerSystem**, et moderne lager- og inventorysystem desig
 - **Fejlhåndtering**: Domæne-specifikke custom exceptions for robust error handling  
 - **Logging**: Handlinger logges for brugere og produkter, så alle ændringer kan spores  
 
-## 📁 Repository Struktur
-src/main/java/
-├─ config/ # Global fejlhåndtering, JWT-konfiguration
-├─ logs/ # Log-service, modeller, repositories
-├─ product/ # Produkt-modeller, DTOs, repositories, services
-├─ user/ # Bruger-modeller, DTOs, repositories, services
-├─ warehouse/ # Lager-modeller, repositories, services
-├─ delivery/ # Levering og lagerstyring
-└─ Application.java # Spring Boot entry point
 ## 🔗 Frontend
 
 **Frontend-applikationen** findes her:  
