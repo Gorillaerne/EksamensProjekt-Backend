@@ -46,7 +46,7 @@ public class WarehouseController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Warehouse>> getWarehouseById(Authentication authentication, @PathVariable int id){
+    public ResponseEntity<Warehouse> getWarehouseById(Authentication authentication, @PathVariable int id){
         return new ResponseEntity<>(warehouseService.getWarehouseById(id), HttpStatus.FOUND);
     }
 

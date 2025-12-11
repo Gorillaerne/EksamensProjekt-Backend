@@ -39,13 +39,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest){
-        try {
 
             return ResponseEntity.status(HttpStatus.OK).body(authService.login(loginRequest));
-        } catch (Exception e) {
-            return  ResponseEntity.status(401).body("Forkert kode eller brugernavn");
-        }
-
     }
 
     @GetMapping("/me")

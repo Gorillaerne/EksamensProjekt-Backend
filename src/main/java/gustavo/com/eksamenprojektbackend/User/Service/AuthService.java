@@ -1,5 +1,6 @@
 package gustavo.com.eksamenprojektbackend.User.Service;
 
+import gustavo.com.eksamenprojektbackend.Exceptions.UserExceptions.LoginFailedException;
 import gustavo.com.eksamenprojektbackend.Security.JwtUtil;
 import gustavo.com.eksamenprojektbackend.User.DTO.LoginRequestDTO;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,16 +21,25 @@ public class AuthService {
     }
 
     public Map<String,Object> login(LoginRequestDTO loginRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginRequest.username(),
-                loginRequest.password())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.username(),
+                            loginRequest.password()
+                    )
+            );
 
-        String token = jwtUtil.generateToken(loginRequest.username());
+            String token = jwtUtil.generateToken(loginRequest.username());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", token);
-        response.put("username", loginRequest.username());
-        return response;
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("username", loginRequest.username());
+            return response;
+
+        } catch (org.springframework.security.core.AuthenticationException e) {
+            throw new LoginFailedException("Login mislykkedes: Forkert brugernavn eller adgangskode", e);
+        } catch (Exception e) {
+            throw new LoginFailedException("Noget gik galt under login", e);
+        }
     }
 }

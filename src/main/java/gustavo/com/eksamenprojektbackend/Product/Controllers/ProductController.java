@@ -54,17 +54,12 @@ public class ProductController {
     @PatchMapping("/{id}")
     public ResponseEntity<Product> updateProduct(Authentication authentication, @PathVariable Integer id, @RequestBody ProductDTO product) {
         User user = (User) authentication.getPrincipal();
-        try {
             Product updatedProduct = productService.updateProduct(id, product, user);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductWithWarehouseDTO> getProductWithWarehouseDTO (@PathVariable Integer id){
-        System.out.println(productService.getProductWithWarehouseDTO(id));
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductWithWarehouseDTO(id));
     }
 
