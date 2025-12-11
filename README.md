@@ -1,43 +1,60 @@
-# Elvang LagerSystem 🏭📦
+# Elvang LagerSystem - Backend ☕🏭📦
 
-Velkommen til **Elvang LagerSystem**, et moderne lager- og inventorysystem designet til at optimere driften hos **Elvang**. Udviklet med ❤️ af **Team Gorillaerne**, og bygget på **Java Spring Boot** for et robust, skalerbart og effektivt backend-system.
+Velkommen til **Elvang LagerSystem**, et moderne lager- og inventorysystem designet til at optimere driften hos **Elvang**. 🚀
 
-## 🚀 Funktioner
+Dette system er udviklet med ❤️ af **Team Gorillaerne 🦍** og bygget på **Java Spring Boot** for at sikre et robust, skalerbart og effektivt backend-system.
 
-- **Brugeradministration**: Opret, opdater og administrer brugere med roller og tilladelser.  
-- **Produktstyring**: Tilføj, opdater og følg produkter, inkl. SKU, pris, beskrivelse og billeder.  
-- **Lagerstyring**: Opret lagre, administrer beholdninger og spor produkter på tværs af lokationer.  
-- **Leveringsregistrering**: Registrer leveringer og opdater automatisk lagerbeholdningen.  
-- **Produktflytning**: Flyt varer mellem lagre med detaljeret logning.  
-- **Beholdningsindsigt**: Overvåg produkter med lav lagerbeholdning og generer lager-specifikke rapporter.  
-- **Log-system**: Alle handlinger logges for ansvarlighed og sporbarhed.  
+---
 
-## 🛠 Teknologi
+## 🔗 Links & Adgange
 
-- **Backend**: Java, Spring Boot, Spring Data JPA, H2 Database / PostgreSQL (konfigurerbar)  
-- **Autentificering**: JWT-baseret login med Spring Security  
-- **Fejlhåndtering**: Domæne-specifikke custom exceptions for robust error handling  
-- **Logging**: Handlinger logges for brugere og produkter, så alle ændringer kan spores  
+Her finder du vigtige links relateret til projektet:
+* **Live Demo/Deployment**: [Indsæt link til den kørende frontend-applikation her] 🌐
+* **Frontend Repository**: [https://github.com/Gorillaerne/EksamensProjekt-Frontend] 🌐
 
-## 🔗 Frontend
+---
 
-**Frontend-applikationen** findes her:  
-[Indsæt link til frontend repository]  
+## 🚀 Kernedriftsfunktioner ✨
 
-Frontend giver et moderne interface til backend og tilbyder:  
+Backend'en driver de essentielle forretningsprocesser og API'er:
 
-- Dashboard med oversigt over lagre og produkter  
-- Formularer til oprettelse/opdatering af brugere, produkter og lagre  
-- Levering og lagerflytning  
+* **Brugeradministration 👥**: Opret, opdater og administrer brugere med roller og tilladelser (RBAC).
+* **Produktstyring 🏷️**: Tilføj, opdater og følg produkter, inkl. SKU, pris, beskrivelse og billeder.
+* **Lagerstyring 🏢**: Opret lagre, administrer beholdninger og spor produkter på tværs af lokationer.
+* **Leveringsregistrering 🚚**: Registrer indgående leverancer, hvilket automatisk opdaterer lagerbeholdningen.
+* **Produktflytning 🔄**: Håndter flytning af varer mellem lagre med detaljeret logning.
+* **Beholdningsindsigt 📈**: Overvåg produkter med lav lagerbeholdning og generer lager-specifikke rapporter.
+* **Log-system 📜**: Alle kritiske handlinger logges for ansvarlighed og fuld sporbarhed.
 
+---
 
-🌟 Team Gorillaerne
-Gustav Torup Jacobsen  –  Developer
+## 🛠 Teknologi-Stack og Arkitektur ⚙️
 
-Jonas Nilket-Johannesen – Developer - Product-owner
+Systemet er bygget med fokus på robusthed, sikkerhed og skalerbarhed:
 
-Malthe Tiufkær – Developer
+| Kategori | Teknologi | Fokusområde |
+| :--- | :--- | :--- |
+| **Backend** | Java, Spring Boot | Det primære udviklingsframework for hurtig og stabil service. |
+| **Database** | Spring Data JPA, H2 / PostgreSQL | JPA til persistering; H2 til udvikling/test, PostgreSQL til produktion. |
+| **Sikkerhed** | JWT med Spring Security | Token-baseret autentificering for sikker adgang til API'er. |
+| **Fejlhåndtering** | Custom Exceptions | Domæne-specifikke exceptions for præcis og robust error handling. |
+| **Sporbarhed** | Logging | Detaljeret logning af bruger- og produktændringer for audit-trail. |
 
-Frederik Weber Oxholm – Developer
+---
 
-Bygget med 🦍 af Team Gorillaerne for Elvang. Lagerstyring har aldrig været så organiseret og sjovt! 🎉
+## 🌟 Team Gorillaerne 🦍🍌
+
+Dette robuste backend-system er udviklet af:
+
+* **Gustav Torup Jacobsen** – Developer 💻
+* **Jonas Nilket-Johannesen** – Developer & Product-owner 🧑‍💼
+* **Malthe Tiufkær** – Developer 👨‍💻
+* **Frederik Weber Oxholm** – Developer 💡
+
+---
+
+**Bygget med 🦍 af Team Gorillaerne for Elvang.** Lagerstyring har aldrig været så organiseret og sjovt! 🎉
+
+---
+
+Har du brug for, at jeg tilføjer et afsnit om, hvordan man kører eller konfigurerer backend-applikationen lokalt?
