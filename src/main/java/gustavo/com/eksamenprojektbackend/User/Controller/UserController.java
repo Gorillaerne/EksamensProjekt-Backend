@@ -26,8 +26,9 @@ public class UserController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable int id){
-        userservice.deleteUser(id);
+    public ResponseEntity<?> deleteUser(Authentication authentication, @PathVariable int id){
+        User user = (User) authentication.getPrincipal();
+        userservice.deleteUser(id, user);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -50,9 +51,9 @@ public class UserController {
 
 
     @PostMapping()
-    public ResponseEntity<?> createUser (@RequestBody UserDTO dto) {
-        System.out.println("PIKKKKK");
-        User newUser = userservice.createUser(dto);
+    public ResponseEntity<?> createUser (Authentication authentication, @RequestBody UserDTO dto) {
+        User user = (User) authentication.getPrincipal();
+        User newUser = userservice.createUser(dto, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 }

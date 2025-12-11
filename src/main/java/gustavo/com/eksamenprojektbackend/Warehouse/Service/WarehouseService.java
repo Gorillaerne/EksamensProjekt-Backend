@@ -61,8 +61,7 @@ public class WarehouseService {
             }
 
             warehouseProductRepository.saveAll(wpList);
-            logService.createLogFromUser(user,
-                    "User: " + user.getUsername() + " | Har oprettet et nyt lager: " + savedWarehouse.getName());
+            logService.createLogFromUser(user, "Har oprettet et nyt lager: " + savedWarehouse.getName());
 
             return savedWarehouse;
 
@@ -76,6 +75,7 @@ public class WarehouseService {
     public List<Warehouse> getAllWarehouses(){
         return warehouseRepository.findAll();
     }
+
     public List<WarehouseFrontendDTO> getAllWarehousesForDelivery() {
         try {
             List<Warehouse> warehouses = warehouseRepository.findAll();
@@ -122,8 +122,7 @@ public class WarehouseService {
         try {
             Warehouse savedWarehouse = warehouseRepository.save(existingWarehouse);
 
-            logService.createLogFromUser(user,
-                    "Ændret lageret fra: " + oldName + " | " + oldAddress + " | " + oldDescription +
+            logService.createLogFromUser(user, "Ændret lageret fra: " + oldName + " | " + oldAddress + " | " + oldDescription +
                             " -> " + updatedWarehouse.getName() + " | " + updatedWarehouse.getAddress() + " | " + updatedWarehouse.getDescription());
 
             return savedWarehouse;

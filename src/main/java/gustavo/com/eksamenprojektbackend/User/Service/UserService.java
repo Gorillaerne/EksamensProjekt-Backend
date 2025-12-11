@@ -1,9 +1,11 @@
 package gustavo.com.eksamenprojektbackend.User.Service;
 
+import gustavo.com.eksamenprojektbackend.Exceptions.LogExceptions.LogException;
 import gustavo.com.eksamenprojektbackend.Exceptions.UserExceptions.UserAlreadyExistsException;
 import gustavo.com.eksamenprojektbackend.Exceptions.UserExceptions.UserCreationException;
 import gustavo.com.eksamenprojektbackend.Exceptions.UserExceptions.UserDeletionException;
 import gustavo.com.eksamenprojektbackend.Exceptions.UserExceptions.UserNotFoundException;
+import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 import gustavo.com.eksamenprojektbackend.User.DTO.UserRoleDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.User.DTO.UserDTO;
@@ -24,10 +26,12 @@ public class UserService implements UserDetailsService {
 
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LogService logService;
 
-    public UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder, LogService logService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.logService = logService;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Brugernavn ikke eksisterer ikke"));
     }
 
-    public User createUser(UserDTO dto) {
+    public User createUser(UserDTO dto, User user) {
 
         if (dto == null) {
             throw new UserCreationException("Ingen brugerdata modtaget");
@@ -46,17 +50,22 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsException(dto.getUsername());
         }
 
-        User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setEmail(dto.getEmail());
-        user.setRole(dto.getRole());
+        User newUser = new User();
+        newUser.setUsername(dto.getUsername());
+        newUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+        newUser.setEmail(dto.getEmail());
+        newUser.setRole(dto.getRole());
+
 
         try {
-            return userRepository.save(user);
+            User savedUser = userRepository.save(newUser);
+            logService.createLogFromUser(user, "Har oprettet en ny bruger: " + newUser.getUsername());
+            return savedUser;
+
         } catch (DataIntegrityViolationException e) {
             throw new UserCreationException(e.getMessage(), e);
         }
+
     }
 
     public List<User> getAll() {
@@ -67,14 +76,18 @@ public class UserService implements UserDetailsService {
         return new UserRoleDTO(user.getRole());
     }
 
-    public void deleteUser(int id) {
-        User user = userRepository.findById(id)
+    public void deleteUser(int id, User user) {
+        User selectedUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("id: " + id));
 
         try {
-            userRepository.delete(user);
+            logService.createLogFromUser(user, "Har slettet en bruger: " + selectedUser);
+            userRepository.delete(selectedUser);
+
         } catch (DataIntegrityViolationException e) {
             throw new UserDeletionException(e.getMessage(), e);
         }
+
+
     }
 }
