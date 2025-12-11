@@ -158,43 +158,43 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Kunne ikke finde produkt med id: " + id));
 
-        StringBuilder changes = new StringBuilder();
-
         String oldName = product.getName();
         String oldDescription = product.getDescription();
         Double oldPrice = product.getPrice();
         String oldPicture = product.getPicture();
         String oldSKU = product.getSKU();
 
+        StringBuilder changes = new StringBuilder();
+
         if (productRequest.name() != null && !productRequest.name().equals(oldName)) {
             product.setName(productRequest.name());
-            changes.append("navn ændret fra ").append(oldName).append(" til ").append(productRequest.name()).append(". ");
+            changes.append("Navn ændret fra: ").append(oldName).append(" -> ").append(productRequest.name()).append(". ");
         }
 
         if (productRequest.description() != null && !productRequest.description().equals(oldDescription)) {
             product.setDescription(productRequest.description());
-            changes.append("beskrivelse ændret fra ").append(oldDescription).append(" til ").append(productRequest.description()).append(". ");
+            changes.append("Beskrivelse ændret fra: ").append(oldDescription).append(" -> ").append(productRequest.description()).append(". ");
         }
 
         if (productRequest.price() != null && !productRequest.price().equals(oldPrice)) {
             product.setPrice(productRequest.price());
-            changes.append("pris ændret fra ").append(oldPrice).append(" til ").append(productRequest.price()).append(". ");
+            changes.append("Pris ændret fra: ").append(oldPrice).append(" -> ").append(productRequest.price()).append(". ");
         }
 
         if (productRequest.picture() != null && !productRequest.picture().equals(oldPicture)) {
             product.setPicture(productRequest.picture());
-            changes.append("billede er ændret");
+            changes.append("Billede er ændret");
         }
 
         if (productRequest.SKU() != null && !productRequest.SKU().equals(oldSKU)) {
             product.setSKU(productRequest.SKU());
-            changes.append("SKU ændret fra ").append(oldSKU).append(" til ").append(productRequest.SKU()).append(". ");
+            changes.append("SKU ændret fra: ").append(oldSKU).append(" -> ").append(productRequest.SKU()).append(". ");
         }
 
         Product productResponse = productRepository.save(product);
 
         if (!changes.isEmpty()) {
-            logService.createLogFromProduct(productResponse, user, "Ændringer for produkt: " + changes);
+            logService.createLogFromProduct(productResponse, user, "Produkt ændring! | " + changes);
         }
 
         return productResponse;

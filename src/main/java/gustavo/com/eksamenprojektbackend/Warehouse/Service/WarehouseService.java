@@ -11,6 +11,7 @@ import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
+import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseProductDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseCreateDTO;
 import gustavo.com.eksamenprojektbackend.Warehouse.DTO.WarehouseFrontendDTO;
@@ -21,6 +22,7 @@ import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductR
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -61,8 +63,7 @@ public class WarehouseService {
             }
 
             warehouseProductRepository.saveAll(wpList);
-            logService.createLogFromUser(user,
-                    "User: " + user.getUsername() + " | Har oprettet et nyt lager: " + savedWarehouse.getName());
+            logService.createLogFromUser(user, "Har oprettet et nyt lager: " + savedWarehouse.getName());
 
             return savedWarehouse;
 
@@ -76,6 +77,7 @@ public class WarehouseService {
     public List<Warehouse> getAllWarehouses(){
         return warehouseRepository.findAll();
     }
+
     public List<WarehouseFrontendDTO> getAllWarehousesForDelivery() {
         try {
             List<Warehouse> warehouses = warehouseRepository.findAll();
@@ -100,33 +102,44 @@ public class WarehouseService {
     }
 
 
-    public Warehouse updateWarehouse(Integer id, Warehouse updatedWarehouse, User user) {
-        if (updatedWarehouse == null) {
+    public Warehouse updateWarehouse(Integer id, WarehouseDTO warehouseRequest, User user) {
+
+        if (warehouseRequest == null) {
             throw new WareHouseUpdateException("Opdateringsdata må ikke være null");
         }
 
+        Warehouse warehouse = warehouseRepository.findById(id)
+                .orElseThrow(() -> new WareHouseNotFoundException("Kunne ikke finde lager med id: " + id));
 
-        Warehouse existingWarehouse = warehouseRepository.findById(id)
-                .orElseThrow(() -> new WareHouseNotFoundException("id : " + id));
+        String oldName = warehouse.getName();
+        String oldAddress = warehouse.getAddress();
+        String oldDescription = warehouse.getDescription();
 
+        StringBuilder changes = new StringBuilder();
 
-        String oldName = existingWarehouse.getName();
-        String oldAddress = existingWarehouse.getAddress();
-        String oldDescription = existingWarehouse.getDescription();
+        if (warehouseRequest.name() != null && !warehouseRequest.name().equals(oldName)) {
+            warehouse.setName(warehouseRequest.name());
+            changes.append("Navn ændret fra ").append(oldName).append(" -> ").append(warehouseRequest.name()).append(". ");
+        }
 
+        if (warehouseRequest.address() != null && !warehouseRequest.address().equals(oldAddress)) {
+            warehouse.setAddress(warehouseRequest.address());
+            changes.append("Adresse ændret fra ").append(oldAddress).append(" -> ").append(warehouseRequest.address()).append(". ");
+        }
 
-        existingWarehouse.setName(updatedWarehouse.getName());
-        existingWarehouse.setAddress(updatedWarehouse.getAddress());
-        existingWarehouse.setDescription(updatedWarehouse.getDescription());
+        if (warehouseRequest.description() != null && !warehouseRequest.description().equals(oldDescription)) {
+            warehouse.setDescription(warehouseRequest.description());
+            changes.append("Beskrivelse ændret fra ").append(oldDescription).append(" -> ").append(warehouseRequest.description()).append(". ");
+        }
 
         try {
-            Warehouse savedWarehouse = warehouseRepository.save(existingWarehouse);
+            Warehouse warehouseResponse = warehouseRepository.save(warehouse);
 
-            logService.createLogFromUser(user,
-                    "Ændret lageret fra: " + oldName + " | " + oldAddress + " | " + oldDescription +
-                            " -> " + updatedWarehouse.getName() + " | " + updatedWarehouse.getAddress() + " | " + updatedWarehouse.getDescription());
+            if (!changes.isEmpty()) {
+                logService.createLogFromUser(user, "Lager ændring: " + changes);
+            }
 
-            return savedWarehouse;
+            return warehouseResponse;
 
         } catch (LogException e) {
             throw new WareHouseUpdateException("Fejl under oprettelse af logs", e);
@@ -211,6 +224,33 @@ public class WarehouseService {
            }
        }
        return wpLowQtyList;
+    }
+
+    public void deleteWarehouse(int id, User user) {
+        Warehouse selectedWarehouse = warehouseRepository.findById(id)
+                .orElseThrow(() -> new WareHouseNotFoundException("id: " + id));
+
+        List<WarehouseProduct> products = warehouseProductRepository.findAllProductsByWarehouseId(id);
+
+        for (WarehouseProduct wp : products) {
+            if (wp.getQuantity() > 0) {
+                throw new WarehouseDeletionException(
+                        "Kan ikke slette lager - produkt " + wp.getProduct().getName() +
+                                " har stadig " + wp.getQuantity() + " stk. på lager"
+                );
+            }
+        }
+
+        try {
+            logService.createLogFromUser(user, "Har slettet et lager: " + selectedWarehouse.getName());
+            warehouseRepository.delete(selectedWarehouse);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new WarehouseDeletionException(e.getMessage(), e);
+
+        } catch (Exception e) {
+            throw new WarehouseDeletionException("Uventet fejl under sletning: " + e.getMessage(), e);
+        }
     }
 
 }
