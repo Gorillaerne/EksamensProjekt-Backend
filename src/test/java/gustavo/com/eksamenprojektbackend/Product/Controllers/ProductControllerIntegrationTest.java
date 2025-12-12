@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Product.Service.ProductService;
+import gustavo.com.eksamenprojektbackend.Security.JwtUtil;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -21,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
-@AutoConfigureMockMvc(addFilters = false) // ❗ Slår security fra for testen
+@AutoConfigureMockMvc(addFilters = false)
 public class ProductControllerIntegrationTest {
 
     @Autowired
@@ -36,9 +38,14 @@ public class ProductControllerIntegrationTest {
     @MockBean
     private Authentication authentication;
 
-    // ========== CREATE PRODUCT ==========
+    @MockBean
+    JwtUtil jwtUtil;
+    @MockBean
+    UserDetailsService userDetailsService;
+
+
     @Test
-    void createProduct_success() throws Exception {
+    void createProduct() throws Exception {
 
         ProductDTO dto = new ProductDTO(
                 0, "Test Product", "Description", "picture.png", "SKU123", 99.99, 0
@@ -67,9 +74,9 @@ public class ProductControllerIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Test Product"));
     }
 
-    // ========== UPDATE PRODUCT ==========
+
     @Test
-    void updateProduct_success() throws Exception {
+    void updateProduct() throws Exception {
 
         ProductDTO dto = new ProductDTO(
                 0, "Updated", "Updated desc", "updated.png", "SKU555", 199.99, 0

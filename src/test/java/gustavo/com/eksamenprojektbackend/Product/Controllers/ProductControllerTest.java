@@ -43,9 +43,8 @@ public class ProductControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // ---------------------- CREATE PRODUCT ----------------------
     @Test
-    void createProduct_success() throws Exception {
+    void createProduct() throws Exception {
 
         ProductDTO dto = new ProductDTO(
                 0, "Test Product", "Description", "picture.png", "SKU123", 99.99, 0
@@ -74,9 +73,8 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.name").value("Test Product"));
     }
 
-    // ---------------------- UPDATE PRODUCT ----------------------
     @Test
-    void updateProduct_success() throws Exception {
+    void updateProduct() throws Exception {
 
         ProductDTO dto = new ProductDTO(
                 0, "Updated", "Updated desc", "updated.png", "SKU555", 199.99, 0

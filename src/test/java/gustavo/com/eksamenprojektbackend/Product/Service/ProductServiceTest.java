@@ -37,7 +37,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void createProduct_success() {
+    void createProduct() {
         // Arrange
         ProductDTO dto = new ProductDTO(
                 2,
@@ -79,7 +79,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void updateProduct_success() {
+    void updateProduct() {
         // Arrange
         Product existing = new Product(
                 "OldName",

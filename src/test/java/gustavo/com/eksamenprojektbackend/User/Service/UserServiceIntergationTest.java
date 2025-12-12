@@ -31,8 +31,15 @@ class UserServiceIntegrationTest {
         dto.setEmail("newuser@example.com");
         dto.setRole("USER");
 
+        User user = new User();
+        user.setUsername("something");
+        user.setPassword("test");
+        user.setEmail("mail@test.com");
+
+        userRepository.save(user); // <- giver user et ID
+
         // Act
-        User created = userService.createUser(dto);
+        User created = userService.createUser(dto, user);
 
         // Assert
         assertNotNull(created.getId());
@@ -55,9 +62,17 @@ class UserServiceIntegrationTest {
         dto.setEmail("admin@example.com");
         dto.setRole("ADMIN");
 
+        User user = new User();
+        user.setUsername("something");
+        user.setPassword("test");
+        user.setEmail("mail@test.com");
+
+        userRepository.save(user); // <- giver user et ID
+
+
         UserAlreadyExistsException ex = assertThrows(
                 UserAlreadyExistsException.class,
-                () -> userService.createUser(dto)
+                () -> userService.createUser(dto, user)
         );
 
         assertEquals("admin", ex.getMessage());

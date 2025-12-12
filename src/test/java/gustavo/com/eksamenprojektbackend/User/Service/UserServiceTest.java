@@ -1,6 +1,7 @@
 package gustavo.com.eksamenprojektbackend.User.Service;
 
 import gustavo.com.eksamenprojektbackend.Exceptions.UserExceptions.UserAlreadyExistsException;
+import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 import gustavo.com.eksamenprojektbackend.User.DTO.UserDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.User.Repository.IUserRepository;
@@ -22,11 +23,14 @@ class UserServiceTest {
     private PasswordEncoder passwordEncoder;
     private UserService userService;
 
+    private LogService logService;
+
     @BeforeEach
     void setup() {
         userRepository = mock(IUserRepository.class);
         passwordEncoder = mock(PasswordEncoder.class);
-        userService = new UserService(userRepository, passwordEncoder);
+        logService = mock(LogService.class);
+        userService = new UserService(userRepository, passwordEncoder, logService);
     }
 
     @Test
@@ -37,6 +41,12 @@ class UserServiceTest {
         dto.setPassword("password123");
         dto.setEmail("john@example.com");
         dto.setRole("USER");
+
+        User user = new User();
+        user.setUsername("Doe");
+        user.setEmail("doe123@joe.com");
+        user.setPassword("1234");
+        user.setRole("USER");
 
         when(userRepository.findByUsername("john")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("password123")).thenReturn("ENCODED_PASS");
@@ -51,7 +61,7 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
         // Act
-        User result = userService.createUser(dto);
+        User result = userService.createUser(dto, user);
 
         // Assert
         assertEquals("john", result.getUsername());
@@ -80,12 +90,18 @@ class UserServiceTest {
         dto.setEmail("john@example.com");
         dto.setRole("USER");
 
+        User user = new User();
+        user.setUsername("Doe");
+        user.setEmail("doe123@joe.com");
+        user.setPassword("1234");
+        user.setRole("USER");
+
         when(userRepository.findByUsername("john")).thenReturn(Optional.of(new User()));
 
         // Act + Assert
         UserAlreadyExistsException ex = assertThrows(
                 UserAlreadyExistsException.class,
-                () -> userService.createUser(dto)
+                () -> userService.createUser(dto, user)
         );
 
         assertEquals("john", ex.getMessage());
