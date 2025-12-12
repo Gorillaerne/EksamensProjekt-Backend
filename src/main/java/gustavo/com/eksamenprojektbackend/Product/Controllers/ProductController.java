@@ -46,7 +46,6 @@ public class ProductController {
 
     @PostMapping("/delivery")
     public ResponseEntity<?> registerDeliveryOfGoods(Authentication authentication, @RequestBody List<RegisterDeliveryDTO> deliveryDTOS){
-        System.out.println(deliveryDTOS);
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>(productService.registerDeliveryOfGoods(deliveryDTOS, user), HttpStatus.CREATED);
     }
@@ -62,5 +61,13 @@ public class ProductController {
     public ResponseEntity<ProductWithWarehouseDTO> getProductWithWarehouseDTO (@PathVariable Integer id){
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductWithWarehouseDTO(id));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id){
+        productService.deleteProductById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 
 }
