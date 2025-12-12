@@ -24,7 +24,6 @@ class ProductServiceTest {
     private IWarehouseProductRepository warehouseProductRepository;
     private IWarehouseRepository warehouseRepository;
     private ProductService productService;
-    private ILogRepository iLogRepository;
 
     @BeforeEach
     void setup() {
@@ -34,7 +33,7 @@ class ProductServiceTest {
         warehouseRepository = mock(IWarehouseRepository.class);
 
         productService = new ProductService(
-                productRepository, logService, warehouseProductRepository, warehouseRepository, iLogRepository
+                productRepository, logService, warehouseProductRepository, warehouseRepository
         );
     }
 

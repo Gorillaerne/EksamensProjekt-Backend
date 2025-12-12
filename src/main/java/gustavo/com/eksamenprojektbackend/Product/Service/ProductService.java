@@ -30,15 +30,14 @@ public class ProductService {
     private final LogService logService;
     private final IWarehouseProductRepository warehouseProductRepository;
     private final IWarehouseRepository warehouseRepository;
-    private final ILogRepository iLogRepository;
+    private ILogRepository iLogRepository;
 
 
-    public ProductService(IProductRepository productRepository, LogService logService, IWarehouseProductRepository warehouseProductRepository, IWarehouseRepository warehouseRepository, ILogRepository iLogRepository) {
+    public ProductService(IProductRepository productRepository, LogService logService, IWarehouseProductRepository warehouseProductRepository, IWarehouseRepository warehouseRepository) {
         this.productRepository = productRepository;
         this.logService = logService;
         this.warehouseProductRepository = warehouseProductRepository;
         this.warehouseRepository = warehouseRepository;
-        this.iLogRepository = iLogRepository;
     }
 
     @Transactional
