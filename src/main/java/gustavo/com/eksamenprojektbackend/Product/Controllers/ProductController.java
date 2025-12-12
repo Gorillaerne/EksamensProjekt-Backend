@@ -62,11 +62,11 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductWithWarehouseDTO(id));
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id){
-//
-//
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id){
+        productService.deleteProductById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 

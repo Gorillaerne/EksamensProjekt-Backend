@@ -36,7 +36,7 @@ public class Product {
     @Column()
     private Double price;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnoreProperties
     List<WarehouseProduct> warehouseProductList = new ArrayList<>();
 

@@ -6,26 +6,22 @@ import gustavo.com.eksamenprojektbackend.Exceptions.ProductException.ProductCrea
 import gustavo.com.eksamenprojektbackend.Exceptions.ProductException.ProductFetchException;
 import gustavo.com.eksamenprojektbackend.Exceptions.ProductException.ProductNotFoundException;
 import gustavo.com.eksamenprojektbackend.Exceptions.WarehouseExceptions.WareHouseNotFoundException;
+import gustavo.com.eksamenprojektbackend.Logs.Repository.ILogRepository;
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 import gustavo.com.eksamenprojektbackend.Product.DTO.*;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
 import gustavo.com.eksamenprojektbackend.Product.Model.Product;
 import gustavo.com.eksamenprojektbackend.Product.Repository.IProductRepository;
-import gustavo.com.eksamenprojektbackend.Warehouse.Model.Warehouse;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProduct;
 import gustavo.com.eksamenprojektbackend.Warehouse.Model.WarehouseProductId;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseProductRepository;
 import gustavo.com.eksamenprojektbackend.Warehouse.Repository.IWarehouseRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -34,13 +30,15 @@ public class ProductService {
     private final LogService logService;
     private final IWarehouseProductRepository warehouseProductRepository;
     private final IWarehouseRepository warehouseRepository;
+    private final ILogRepository iLogRepository;
 
 
-    public ProductService(IProductRepository productRepository, LogService logService, IWarehouseProductRepository warehouseProductRepository, IWarehouseRepository warehouseRepository) {
+    public ProductService(IProductRepository productRepository, LogService logService, IWarehouseProductRepository warehouseProductRepository, IWarehouseRepository warehouseRepository, ILogRepository iLogRepository) {
         this.productRepository = productRepository;
         this.logService = logService;
         this.warehouseProductRepository = warehouseProductRepository;
         this.warehouseRepository = warehouseRepository;
+        this.iLogRepository = iLogRepository;
     }
 
     @Transactional
@@ -240,4 +238,14 @@ public class ProductService {
                 productWarehouseDTOS
         );
     }
+
+    @Transactional
+    public void deleteProductById(Integer id) {
+        Product product = productRepository.findById(id)
+        .orElseThrow(() -> new ProductNotFoundException("Produktet blev ikke fundet"));
+
+        iLogRepository.deleteAllLogsByProduct(product);
+        productRepository.delete(product);
+    }
+
 }
