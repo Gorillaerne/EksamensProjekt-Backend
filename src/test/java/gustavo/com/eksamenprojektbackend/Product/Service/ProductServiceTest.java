@@ -1,5 +1,6 @@
 package gustavo.com.eksamenprojektbackend.Product.Service;
 
+import gustavo.com.eksamenprojektbackend.Logs.Repository.ILogRepository;
 import gustavo.com.eksamenprojektbackend.Logs.Service.LogService;
 import gustavo.com.eksamenprojektbackend.Product.DTO.ProductDTO;
 import gustavo.com.eksamenprojektbackend.User.Model.User;
@@ -23,6 +24,7 @@ class ProductServiceTest {
     private IWarehouseProductRepository warehouseProductRepository;
     private IWarehouseRepository warehouseRepository;
     private ProductService productService;
+    private ILogRepository iLogRepository;
 
     @BeforeEach
     void setup() {
@@ -32,7 +34,7 @@ class ProductServiceTest {
         warehouseRepository = mock(IWarehouseRepository.class);
 
         productService = new ProductService(
-                productRepository, logService, warehouseProductRepository, warehouseRepository
+                productRepository, logService, warehouseProductRepository, warehouseRepository, iLogRepository
         );
     }
 
