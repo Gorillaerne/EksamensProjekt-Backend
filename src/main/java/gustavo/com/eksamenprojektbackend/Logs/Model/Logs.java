@@ -23,6 +23,7 @@ public class Logs {
 
     private LocalDateTime timeStamp;
 
+    @Column(columnDefinition = "TEXT")
     private String action;
 
     public Logs() {
