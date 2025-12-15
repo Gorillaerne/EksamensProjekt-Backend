@@ -31,7 +31,6 @@ on:
   # Her bygger og tester vi, men pusher IKKE til GHCR.
   # Dette sikrer at vi fanger fejl FØR kode merges.
   pull_request:
-    branches: [main]
 
   # workflow_dispatch: Tillader manuel kørsel fra GitHub's UI.
   # Nyttigt til debugging eller hvis man vil genbygge uden at pushe kode.
