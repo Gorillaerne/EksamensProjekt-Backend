@@ -274,6 +274,9 @@ jobs:
       #
       # Samme if-betingelse som login - kun push ved merge til main.
 
+      - name: Set lowercase owner
+        run: echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+
       - name: Push to GHCR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
