@@ -40,7 +40,7 @@ on:
 
 permissions:
   # contents: read - Tillader at læse repository indhold (checkout kode)
-  contents: read
+  contents: write
 
   # packages: write - Tillader at uploade til GitHub Container Registry
   # GHCR er en del af GitHub Packages, derfor denne permission
