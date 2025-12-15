@@ -25,13 +25,13 @@ on:
   # push: Kører når commits pushes direkte til main branch.
   # Dette er typisk når en PR merges.
   push:
-    branches: [master]
+    branches: [main]
 
   # pull_request: Kører når en PR åbnes eller opdateres mod main.
   # Her bygger og tester vi, men pusher IKKE til GHCR.
   # Dette sikrer at vi fanger fejl FØR kode merges.
   pull_request:
-    branches: [master]
+    branches: [main]
 
   # workflow_dispatch: Tillader manuel kørsel fra GitHub's UI.
   # Nyttigt til debugging eller hvis man vil genbygge uden at pushe kode.
@@ -251,7 +251,7 @@ jobs:
       # password: GITHUB_TOKEN - Automatisk genereret token med packages:write
 
       - name: Log in to GHCR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: ghcr.io
@@ -272,7 +272,7 @@ jobs:
       # Samme if-betingelse som login - kun push ved merge til main.
 
       - name: Push to GHCR
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           docker push ghcr.io/${{ github.repository_owner }}/elvang-backend:latest
 
