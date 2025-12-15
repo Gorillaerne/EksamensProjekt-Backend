@@ -24,8 +24,10 @@ name: deploy.yml
 on:
   # push: Kører når commits pushes direkte til main branch.
   # Dette er typisk når en PR merges.
-  push:
-    branches: [main]
+  workflow_run:
+    workflows: ["maven"]   # Exact name of your Maven workflow
+    types:
+      - completed
   # workflow_dispatch: Tillader manuel kørsel fra GitHub's UI.
   # Nyttigt til debugging eller hvis man vil genbygge uden at pushe kode.
   workflow_dispatch:
@@ -61,6 +63,7 @@ jobs:
   # Alle steps kører sekventielt på samme runner.
 
   build-and-push:
+    if: ${{ github.event.workflow_run.head_branch == 'main' }}
     # runs-on: Hvilken type maskine skal job køre på?
     # ubuntu-latest er en gratis GitHub-hosted runner med Docker installeret.
     runs-on: ubuntu-latest
