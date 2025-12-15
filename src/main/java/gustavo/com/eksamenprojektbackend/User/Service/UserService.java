@@ -56,13 +56,15 @@ public class UserService implements UserDetailsService {
         newUser.setEmail(dto.getEmail());
         newUser.setRole(dto.getRole());
 
-        if (user == null) {
-            return new User();
-        }
+
 
 
         try {
             User savedUser = userRepository.save(newUser);
+
+            if (user == null) {
+                return savedUser;
+            }
             logService.createLogFromUser(user, "Har oprettet en ny bruger: " + newUser.getUsername());
             return savedUser;
 

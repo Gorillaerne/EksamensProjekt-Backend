@@ -27,9 +27,12 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        if (!userRepository.existsByUsername("admin")) {
+        try {
             userService.createUser(new UserDTO("admin", adminPassword , adminEmail , "ROLE_ADMIN"), null);
+        } catch (Exception e) {
+            System.out.println("Admin ekstisrere allerede :)");
         }
+
 
     }
 }
