@@ -9,7 +9,7 @@ Dette system er udviklet med ❤️ af **Team Gorillaerne 🦍** og bygget på *
 ## 🔗 Links & Adgange
 
 Her finder du vigtige links relateret til projektet:
-* **Live Demo/Deployment**: [Indsæt link til den kørende frontend-applikation her] 🌐
+* **Live Demo/Deployment**: [https://gruppe2.banko.bingo/] 🌐
 * **Frontend Repository**: [https://github.com/Gorillaerne/EksamensProjekt-Frontend] 🌐
 
 ---
