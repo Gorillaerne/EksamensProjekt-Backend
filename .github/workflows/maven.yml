@@ -13,6 +13,7 @@ on:
     branches: ["Quality-Assurance"]
   pull_request:
     branches: [ "main", "Quality-Assurance"]
+    workflow_dispatch:
 
 jobs:
   build:
